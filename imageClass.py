@@ -14,10 +14,10 @@ class image(object):
     
     def __init__(self, image, rotation):
         self.image = image
-        self.rotation = rotation
-        self.Y = 5           #distance in cm b/n cameraline and laser
-        self.X = 9.8         #distance in cm from camera to center
-        self.H = 10.95       #distance in cm from laser to center 
+        self.rotation = rotation    #angle of rotation
+        self.Y = 5                  #distance in cm b/n cameraline and laser
+        self.X = 9.8                #distance in cm from camera to center
+        self.H = 10.95              #distance in cm from laser to center 
     
     def filterForredPosition(self,image):
         '''will take in the image that the camera has just capturedPosition and filter
@@ -64,9 +64,17 @@ class image(object):
                 sum += value
             redPosition[index] = sum/len(redPosition[index])
         return redPosition
-            
-    def findColumnOffset(self,redPositionPosition):
-        '''Takes in the original camera/laxer position parameters and uses them
+        
+    def cyl2Car(self, r, theta, height):
+        '''takes in cylindrical coordinates and converts to cartesian'''
+        x = r*np.cos(theta)
+        y = r*np.sin(theta)
+        z = height
+        return (x, y, z)
+        
+
+    def getsPointsFromImage(self,redPositionPosition):
+        '''Takes in the original camera/lazer position parameters and uses them
         to calculate the depth of the object we are measuring for a single lazer
         image'''
         coordinates = []
@@ -74,4 +82,15 @@ class image(object):
             height = len(redPositionPosition) - index
             yPrime = redPositionPosition[index] - self.Y
             depth = self.H*yPrime/self.Y
-            coordinates.append((depth, self.rotation, height))
+            coordinates.append(self.cyl2Car(depth, self.rotation, height))
+        return coordinates
+            
+    
+            
+            
+            
+            
+            
+            
+            
+            
