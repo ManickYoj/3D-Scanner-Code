@@ -1,0 +1,430 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"expo",
+				"exportMesh"
+			],
+			[
+				"find",
+				"findHardware"
+			],
+			[
+				"lock",
+				"lockWaitTime"
+			],
+			[
+				"res",
+				"resolution"
+			],
+			[
+				"exp",
+				"export_file_type"
+			],
+			[
+				"dest",
+				"dest_port"
+			],
+			[
+				"re",
+				"recv"
+			],
+			[
+				"sour",
+				"source_port"
+			],
+			[
+				"new",
+				"new_address"
+			],
+			[
+				"letter",
+				"letter_code"
+			],
+			[
+				"add",
+				"address"
+			],
+			[
+				"udp_",
+				"udp_header"
+			],
+			[
+				"udp",
+				"udp_from"
+			],
+			[
+				"mac",
+				"mac_header"
+			],
+			[
+				"base",
+				"baseRecv"
+			],
+			[
+				"buf",
+				"buflen"
+			],
+			[
+				"my",
+				"my_port"
+			],
+			[
+				"my_",
+				"my_ip_addr"
+			],
+			[
+				"valid",
+				"validIPAndPort"
+			],
+			[
+				"ip_",
+				"ip_package"
+			],
+			[
+				"Mac",
+				"MAC_Identifier"
+			],
+			[
+				"to_",
+				"to_ip_addr"
+			],
+			[
+				"from",
+				"from_ip_addr"
+			],
+			[
+				"pulse",
+				"pulse_width"
+			],
+			[
+				"pul",
+				"pulse_width"
+			],
+			[
+				"start",
+				"startSequence"
+			],
+			[
+				"pro",
+				"protocol"
+			],
+			[
+				"erro",
+				"error_limit"
+			],
+			[
+				"ATG",
+				"ATGGTATTT"
+			],
+			[
+				"dna",
+				"dna_seq"
+			],
+			[
+				"lift",
+				"liftBan"
+			],
+			[
+				"ad",
+				"admin_command_string"
+			],
+			[
+				"command",
+				"command_string"
+			],
+			[
+				"User",
+				"UserCommands"
+			],
+			[
+				"lif",
+				"liftBan"
+			],
+			[
+				"ban",
+				"banUser"
+			],
+			[
+				"p",
+				"printServerLog"
+			],
+			[
+				"cl",
+				"clearServerLog"
+			],
+			[
+				"Ba",
+				"BannedIPs"
+			],
+			[
+				"se",
+				"sendMessage"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/C/Users/nfrancisci/Google Drive/Lazers/Software/scan.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/SoftDes/Grading Code/Software-Design-Ninja/repos/IanHill/hw5/TextAnalysis.py",
+		"/C/Users/nfrancisci/Google Drive/Lazers/Software/hardwareInterfaceClass.py",
+		"/C/Users/nfrancisci/Google Drive/Lazers/Software/Program Design.md",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/RSA/rsa.py",
+		"/C/Users/nfrancisci/Google Drive/Lazers/Software/imageClass.py",
+		"/C/Users/nfrancisci/Google Drive/Lazers/Software/meshClass.py",
+		"/C/Users/nfrancisci/Google Drive/Lazers/Schedule.gsheet",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/RSA/modulararithmetic.py",
+		"/C/Users/nfrancisci/Google Drive/Lazers/Program Design.md",
+		"/C/Users/nfrancisci/Documents/!Documents/webdev/personal_site/dev/js/roulette.js",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/Team/TransmissionModule/receive.py",
+		"/C/Users/nfrancisci/Documents/!Documents/webdev/personal_site/dev/index.html",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/Team/ChatServer/ServerFunctions.py",
+		"/C/Users/nfrancisci/Documents/!Documents/webdev/personal_site/dev/index.css",
+		"/C/Users/nfrancisci/Documents/!Documents/webdev/personal_site/deploy/index.html",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/Team/ChatServer/GlobalVars.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/Team/ChatServer/User.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/Team/ChatServer/UserCommands.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/Team/ChatServer/Chat_Server.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/Team/.gitignore",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/Team/ChatServer/CustomSocket.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/Team/ChatServer/AdminCommands.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/Team/MAC_Identifier.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/Team/Chat Server/Chat Server/CustomSocket.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/Team/Chat Server/Chat Server/MAC_Identifier.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/Team/Chat Server/Chat Server/Chat_Server.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/Team/Chat Server/Chat Server/ServerFunctions.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/Team/Working Code/Receiving/!main.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/Team/TransmissionModule/!main.py",
+		"/C/Users/nfrancisci/Dropbox/Evolve!/Assets/Scripts/SpawnCreatures.cs",
+		"/C/Users/nfrancisci/Dropbox/Evolve!/Assets/Scripts/CreatureGenerator.cs",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/Team/Working Code/Receiving/queuedMonitor.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/Team/Working Code/Receiving/catch.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/Team/Working Code/Receiving/monitor.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/Team/Working Code/Receiving/catchPacket.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/Team/Working Code/Sending/transmit.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/Team/Working Code/Sending/!main.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/SoftDes/Grading Code/Software-Design-Ninja/repos/DoyungLee/LyricMining/mining.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/SoftDes/Grading Code/Software-Design-Ninja/repos/HaleyPelletier/hw5/SentimentAnalyzer.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/Team/Chat Server/Chat Server/GlobalVars.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/SoftDes/Grading Code/Software-Design-Ninja/src/roster.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/SoftDes/Grading Code/Software-Design-Ninja/repos/CynthiaChen/hw5/hw5oscars.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/SoftDes/Grading Code/Software-Design-Ninja/repos/LoganDavis/hw5/baseball.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/Team/Chat Server/UDP_Client.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/Team/Chat Server/UDP_Server.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/SoftDes/Grading Code/Software-Design-Ninja/repos/unit-tests.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/SoftDes/Grading Code/Software-Design-Ninja/src/get_repos.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/SoftDes/Grading Code/Software-Design-Ninja/src/run_tests.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/Team/CodeFromOtherTeam.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/RWM/Lab 5/modified_ping_ino/modified_ping_ino.ino",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/Team/Working Code/Receiving/Utilities.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/Team/Working Code/Receiving/getPulseWidth.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/Team/Working Code/!main.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/SoftDes/Grading Code/Software-Design-Ninja/repos/DennisChen/hw3/gene_finder.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/SoftDes/Grading Code/Software-Design-Ninja/repos/DenizCelik/hw3/gene_finder.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/SoftDes/Grading Code/Software-Design-Ninja/repos/SubhashGubba/hw3/gene_finder.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/SoftDes/Grading Code/Software-Design-Ninja/repos/MafaldaBorges/hw3/gene_finder.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/Team/Chat Server/Chat Server/User.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/SoftDes/Grading Code/Software-Design-Ninja/repos/rileychapman/hw3/gene_finder.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/SoftDes/Grading Code/Software-Design-Ninja/repos/CynthiaChen/hw3/gene_finder.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/Team/Chat Server/Chat Server/AdminCommands.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/Team/Chat Server/Chat Server/UserCommands.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/SoftDes/Grading Code/Software-Design-Ninja/repos/mikaiw/hw3/amino_acids.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/SoftDes/Grading Code/Software-Design-Ninja/repos/mikaiw/hw3/gene_finder.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/SoftDes/Grading Code/Software-Design-Ninja/repos/SusieGrimshaw/hw3/gene_finder.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/SoftDes/Grading Code/Software-Design-Ninja/repos/ZoherGhadyali/hw3/gene_finder.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/SoftDes/Grading Code/Software-Design-Ninja/repos/IanHill/hw3/gene_finder.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Projects/Zeppelin Game/scripts/IO.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Projects/Zeppelin Game/scripts/CachedData.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Projects/Zeppelin Game/scripts/GlobalVars.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Projects/Zeppelin Game/scripts/classes/Menu.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Projects/Zeppelin Game/scripts/dev/generateData.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Projects/Zeppelin Game/scripts/Graphics.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Projects/Zeppelin Game/scripts/Main.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/SoftDes/Grading Code/Software-Design-Ninja/repos/LoganDavis/hw3/gene_finder.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/SoftDes/Grading Code/Software-Design-Ninja/repos/Bishiguro/hw3/gene_finder.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/SoftDes/Grading Code/Software-Design-Ninja/repos/DoyungLee/hw3/gene_finder.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/SoftDes/Grading Code/Software-Design-Ninja/repos/MaireKeene/hw3/gene_finder.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/SoftDes/Grading Code/Software-Design-Ninja/repos/MaireKeene/hw3/gene_finder.pyc",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/Computer Networks/Team/getPulseWidth.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/SoftDes/Grading Code/Software-Design-Ninja/repos/test/hw3/gene_finder.py",
+		"/C/Users/nfrancisci/Documents/!Documents/Academics/SoftDes/Grading Code/Software-Design-Ninja/repos/CecliaAuerswald/hw3/gene_finder.py",
+		"/C/Users/nfrancisci/AppData/Roaming/Sublime Text 3/Packages/User/Python 3.3.sublime-build",
+		"/C/Users/nfrancisci/AppData/Roaming/Sublime Text 3/Packages/User/Python3.sublime-build",
+		"/C/Program Files/Sublime Text 3/Packages/Python.sublime-package",
+		"/C/Users/nfrancisci/AppData/Roaming/Sublime Text 3/Packages/User/python3.sublime-build"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"bishiguro",
+			"dna",
+			"load_seq",
+			"usercommandlist",
+			"clientaliases",
+			"clientalias",
+			"27"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"33"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		},
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			0.479375,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 215.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"project": "software.sublime-project",
+	"replace":
+	{
+		"height": 42.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+			[
+				"",
+				"C:\\Users\\nfrancisci\\Documents\\!Documents\\Academics\\Computer Networks\\Team\\Working Code\\Working Morse Code.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+		"max_columns": 2
+	}
+}
