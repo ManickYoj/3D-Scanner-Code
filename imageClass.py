@@ -73,14 +73,15 @@ class image(object):
         return (x, y, z)
         
 
-    def getsPointsFromImage(self,redPositionPosition):
+    def getsPointsFromImage(self):
         '''Takes in the original camera/lazer position parameters and uses them
         to calculate the depth of the object we are measuring for a single lazer
         image'''
         coordinates = []
-        for index in range(len(redPositionPosition)):
-            height = len(redPositionPosition) - index
-            yPrime = redPositionPosition[index] - self.Y
+        redPosition = self.rememberOnlyredPosition(self.image)
+        for index in range(len(redPosition)):
+            height = len(redPosition) - index
+            yPrime = redPosition[index] - self.Y
             depth = self.H*yPrime/self.Y
             coordinates.append(self.cyl2Car(depth, self.rotation, height))
         return coordinates
