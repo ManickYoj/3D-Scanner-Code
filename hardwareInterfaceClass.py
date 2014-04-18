@@ -8,6 +8,7 @@ Created on Mon Apr 14 10:53:30 2014
 import cv2.cv
 import cv2
 import numpy as np
+import time
 
 class hardwareInterface(object):
     def __init__(self, step_size = 1, camera = 0):
@@ -15,6 +16,7 @@ class hardwareInterface(object):
         self.step_size = step_size;
         self.locked = False;
         self.camera = camera
+        self.startTime = time.time()
 
     def isLocked(self):
         return self.locked;
@@ -45,3 +47,8 @@ class hardwareInterface(object):
     #           WaitKey(0)
                 cv2.cv.SaveImage('capture.jpeg', f)
                 return 'capture.jpeg'   # Does this actually return the image? I assume this is just a string
+                
+    def ConversionFactor(endTime):
+        factor = endTime-self.startTime
+        return factor            
+                
