@@ -49,6 +49,6 @@ class hardwareInterface(object):
                 return 'capture.jpeg'   # Does this actually return the image? I assume this is just a string
                 
     def ConversionFactor(endTime):
-        factor = endTime-self.startTime
+        factor = (endTime-self.startTime)/ (2*pi)
         return factor            
                 
