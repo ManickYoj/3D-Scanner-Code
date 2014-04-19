@@ -8,16 +8,15 @@ class scan
 	"""
 
 	has a list of meshObjects
-	has a hardwareInterface (which may be shared with other instances of this class)
+	has a Hardware class (which may be shared with other instances of this class)
 	has a default resolution attribute
 
-	public function init(hardware, [opt.] resolution)
+	public function init([opt.] resolution)
 		"""
 		Initilizes the class for scanning
 		"""
 
 		Arguments:
-		- hardware: the hardwareInterface object to use for data capture
 		- resolution: the default resolution desired for scans. Defaults to the setResolution default.
 
 		"""
@@ -83,7 +82,7 @@ class hardwareInterface
 		scan period.
 		"""
 
-	public function captureImage()
+	public function captureimage()
 		""" 
 		Takes and returns a picture.
 
@@ -103,7 +102,7 @@ class imageObject
 	public function init(image, timestamp):
 		""" Stores the image and timestamp. """
 
-	public function getPointsFromImage((start_timestamp, dTheta/dt)):
+	public function getpoints((start_timestamp, dTheta/dt)):
 		"""
 		Gets a list of points ((x, y, z) tuples) based on filtering the image and transforming from polar to euclidean representation.
 

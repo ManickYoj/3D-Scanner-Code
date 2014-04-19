@@ -98,6 +98,7 @@ class Mesh(object):
 
 def runtests():
     """ Runs methods of the Mesh class for testing. """
+
     testmesh = Mesh("Test File")
     testmesh.setname("Different Test File")
     testmesh.setsavefolder("Test Exports")

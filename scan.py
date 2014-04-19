@@ -1,29 +1,26 @@
 """
 scan.py
 -------
-Author: Nick Francisci
-Status: Untested
+Author: Nick Francisci & Celine Ta
+Status: Incomplete & Untested
 Description: 
 The main class for an instance of the scanning program. 
-This class should serve as the complete UI for the program.
 
-TODO: See findHardware() & exportMesh()
 """
 
-import hardwareInterfaceClass as h
-import imageClass as i
-import meshClass as m
-import time
-
+import hardware, image, mesh, time
+import Queue as q
+import threading as thread
 
 class scan(object):
-
-	def __init__(self, resolution = 1, verbose = False, debug = False):
+	""" The wrapper class for the program. """
+	
+	def __init__(self, resolution = 4, verbose = False, debug = False):
 		"""
 		Initilizes the scanner with the given parameters.
 
 		Arguments:
-			- resolution: the desired fidelity of the scan as a float. A resolution of 1 will take 6 images.
+			- resolution: the desired fidelity of the scan. A resolution of 1 will take 6 images.
 			- verbose: a boolean used to run this class with additional output text indicating its current state.
 			- debug: a boolean used to run extra debug operations. Debug mode will automatically enable verbose mode.
 		"""
@@ -37,8 +34,8 @@ class scan(object):
 
 		# Initilize class attributes
 		self.setResolution(resolution);
-		self.meshs = [];
 		self.hardware = self.findHardware();
+        self.meshs = [];
 
 
 	def setResolution(self, resolution):
@@ -48,7 +45,7 @@ class scan(object):
 		Arguments: 
 			- resolution = the desired value of resolution
 		"""
-
+        
 		self.resolution = resolution;
 		if self.verbose:
 			print "Resolution set to " + resolution;
@@ -62,7 +59,7 @@ class scan(object):
 		"""
 
 		#TODO: Actually find the hardware!
-		return h.hardwareInterface(1/self.resolution);
+		return hardware.Hardware(1/self.resolution);
 
 
 	def scan(self, lockWaitTime = 1):
@@ -73,35 +70,67 @@ class scan(object):
 			- lockWaitTime: the amount of time for the scanner to wait between attempts to access the hardware.
 		"""
 
+        # Construct and initialize a Queue of tuples of captured images (unprocessed) and time stamps
+        imgqueue = q.Queue();
+        
+        # Construct and initialize a new Thread for processing Images
+        processThread = thread.Thread(target=getimg());
+        processThread.run()
+        
+        # Construct and initialize a Mesh object
+        mesh = Mesh()
+        
 		# Setup hardware lock
 		while(self.hardware.isLocked()):
 			time.sleep(lockWaitTime);
 		self.hardware.toggleLock();
 
 		self.hardware.setStepSize(1/self.resolution);
+        
+        # Keep checking for new captured images to process
+        imglist=[]; 
+    	while(not imgqueue.empty()):
+          	# process the next image in queue and initializes as new Image
+        	img= image.Image(imgqueue.get());
+            # add to list of processed points
+            imglist.append(img) 
 
-		# Scan an object
-		for (i = 0; i<2*math.pi; i+(1/self.resolution)):
+		# Release hardware lock
+		self.hardware.toggleLock();
+        
+        # add to mesh
+        for i in imglist:
+          mesh.addpoints(i.getpoint());
+        self.meshs.append(mesh)
+        
+    def getimg():
+          # Scan an object
+		i=0;
+        while(i<2*math.pi):
+          
 			if self.verbose:
 				print "Taking image " + i + " of " + int(2*math.pi/self.resolution);
-			newImage = i.image(self.hardware.singleImageCap(), self.hardware.getRotation);
+                
+                # adds a new (imgfile, timestamp) tuple to the queue
+                imgqueue.put(self.hardware.captureimage()); 
+                i=i+(1/self.resolution);           
+          		
 			self.hardware.advanceTurntable();
 			self.mesh.addPoints(newImage.getPointsFromImage());
+            
 
 		if self.verbose:
 			print "Image capture complete.";
 
-		# Release hardware lock
-		self.hardware.toggleLock();
 
 
-	def exportMesh(self, mesh_index = None, export_file_type = "CSV", filename=None, filepath = None):
+	def exportMesh(self, mesh_index = None, export_file_type = "CSV", filename = None):
 		"""
 		Exports the mesh as a file if the requested filetype is supported.
 
 		Arguments:
-			- export_file_type: a string indicating the desired filetype in format "OBJ" or ".OBJ"
-			- filepath: (currently unsupported) a string indicating where to save the file if not the directory of this program.
+			- export_file_type: a string indicating the desired filetype.
+			- filename: a string indicating the desired name of the saved file.
 		"""
 
 		#TODO: Actually support these operations in the mesh class
@@ -110,16 +139,14 @@ class scan(object):
 		export_file_type.upper();
 		
 		if mesh_index is None or mesh_index>len(self.meshs):
-			mesh_index = self.meshs[len(self.meshs)];
-		elif mesh_index < 0:
-			mesh_index = 0;
+			mesh_index = self.meshs[-1]
+		elif mesh_index < 0
+			mesh_index = 0
 
-		if (export_file_type is in ["OBJ", ".OBJ"]):
-			self.mesh.exportAsOBJ(filename, filepath);
-		elif (export_file_type is in ["CSV", ".CSV"]):
-			self.mesh.exportAsCSV(filename, filepath);
+		if export_file_type is in ["CSV", ".CSV"]:
+			self.mesh.exportcsv(filename)
 		else:
-			print "The inputted file type is not supported.";
+			print "The inputted file type is not supported."
 
 
 if __name__ == "__main__":
