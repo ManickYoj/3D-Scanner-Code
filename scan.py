@@ -37,7 +37,7 @@ class scan(object):
 
 		# Initilize class attributes
 		self.setResolution(resolution);
-		self.mesh = m.mesh();
+		self.meshs = [];
 		self.hardware = self.findHardware();
 
 
@@ -95,7 +95,7 @@ class scan(object):
 		self.hardware.toggleLock();
 
 
-	def exportMesh(self, export_file_type = "OBJ", filepath = None):
+	def exportMesh(self, mesh_index = None, export_file_type = "CSV", filename=None, filepath = None):
 		"""
 		Exports the mesh as a file if the requested filetype is supported.
 
@@ -108,9 +108,16 @@ class scan(object):
 		#TODO: Support the filepath argument
 
 		export_file_type.upper();
+		
+		if mesh_index is None or mesh_index>len(self.meshs):
+			mesh_index = self.meshs[len(self.meshs)];
+		elif mesh_index < 0:
+			mesh_index = 0;
 
 		if (export_file_type is in ["OBJ", ".OBJ"]):
-			self.mesh.exportAsOBJ(filepath);
+			self.mesh.exportAsOBJ(filename, filepath);
+		elif (export_file_type is in ["CSV", ".CSV"]):
+			self.mesh.exportAsCSV(filename, filepath);
 		else:
 			print "The inputted file type is not supported.";
 
