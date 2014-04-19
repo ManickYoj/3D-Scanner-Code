@@ -9,8 +9,7 @@ The mesh class also supports export methods.
 
 """
 
-import csv
-import os
+import csv, os
 
 class Mesh(object):
     """
