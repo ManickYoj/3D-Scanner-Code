@@ -2,14 +2,13 @@ Author: Nick Francisci
 Description: An outline for all of the objects used in the laser scanning software and their public interfaces.
 ========================
 
-
-
 class scan
 	""" 
 	The wrapper class for an instance of the program.
 	"""
 
 	has a meshObject
+	has a queue of (image, timestamp) tuples
 	has a hardwareInterface (which may be shared with other instances of this class)
 	has a resolution attribute (default 1)
 
