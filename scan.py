@@ -8,19 +8,20 @@ The main class for an instance of the scanning program.
 
 """
 
-import hardware, image, mesh, time
+import hardware, image, time
+import mesh as m
 import Queue as q
-import threading as thread
+import threading as t
 
 class Scan(object):
 	""" The wrapper class for the program. """
 	
-	def __init__(self, resolution = 4, verbose = False, debug = False):
+	def __init__(self, resolution = None, verbose = False, debug = False):
 		"""
 		Initilizes the scanner with the given parameters.
 
 		Arguments:
-			- resolution: the desired fidelity of the scan. A resolution of 1 will take 6 images.
+			- resolution: the desired fidelity of the scan. A resolution of 1 will take 6 images. Defaults to the setresolution default.
 			- verbose: a boolean used to run this class with additional output text indicating its current state.
 			- debug: a boolean used to run extra debug operations. Debug mode will automatically enable verbose mode.
 		"""
@@ -38,13 +39,16 @@ class Scan(object):
         self.meshs = [];
 
 
-	def setresolution(self, resolution):
+	def setresolution(self, resolution = None):
 		""" 
 		Sets or resets the resolution of the scan class. 
 
 		Arguments: 
 			- resolution = the desired value of resolution
 		"""
+
+		if resolution == None:
+			resolution = 4;
         
 		self.resolution = resolution;
 		if self.verbose:
@@ -62,7 +66,7 @@ class Scan(object):
 		return hardware.Hardware(1/self.resolution);
 
 
-	def scan(self, lockWaitTime = 1):
+	def scan(self, lockWaitTime = 1, name = None):
 		"""
 		Performs a single scan.
 
@@ -71,20 +75,20 @@ class Scan(object):
 		"""
 
         # Construct and initialize a Queue of tuples of captured images (unprocessed) and time stamps
-        imgqueue = q.Queue();
+        img_queue = q.Queue();
         
         # Construct and initialize a new Thread for processing Images
-        processthread = thread.Thread(target=begincapture)
+        process_thread = t.Thread(target=begincapture)
                 
-        # Construct and initialize a Mesh object
-        onemesh = Mesh()
+        # Construct and initialize a Mesh object with the name mesh + index, EG mesh0
+        if name = None:
+        	name = "mesh" + str(len(self.meshs)
+        mesh = m.Mesh(name = name)
         
 		# Setup hardware lock
 		while(self.hardware.isLocked()):
 			time.sleep(lockWaitTime);
 		self.hardware.toggleLock();
-
-		self.hardware.setStepSize(1/self.resolution);
 
 		#begin rotation, returns after one rotation (motor keeps rotating)
 		self.hardware.beginscan();
