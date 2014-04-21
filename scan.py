@@ -12,7 +12,7 @@ import hardware, image, mesh, time
 import Queue as q
 import threading as thread
 
-class scan(object):
+class Scan(object):
 	""" The wrapper class for the program. """
 	
 	def __init__(self, resolution = 4, verbose = False, debug = False):
@@ -33,12 +33,12 @@ class scan(object):
 			self.verbose = False;
 
 		# Initilize class attributes
-		self.setResolution(resolution);
-		self.hardware = self.findHardware();
+		self.setresolution(resolution);
+		self.hardware = self.findhardware();
         self.meshs = [];
 
 
-	def setResolution(self, resolution):
+	def setresolution(self, resolution):
 		""" 
 		Sets or resets the resolution of the scan class. 
 
@@ -51,7 +51,7 @@ class scan(object):
 			print "Resolution set to " + resolution;
 
 
-	def findHardware(self):
+	def findhardware(self):
 		""" 
 		Finds the existing instance of hardware and returns a reference to it. 
 
@@ -74,7 +74,7 @@ class scan(object):
         imgqueue = q.Queue();
         
         # Construct and initialize a new Thread for processing Images
-        processThread = thread.Thread(target=begincapture)
+        processthread = thread.Thread(target=begincapture)
                 
         # Construct and initialize a Mesh object
         onemesh = Mesh()
@@ -90,7 +90,7 @@ class scan(object):
 		self.hardware.beginscan();
 
 		#begin taking in images
-		processThread.run()
+		processthread.run()
         
         # Keep checking for new captured images to process
         imglist=[]; 
@@ -106,7 +106,7 @@ class scan(object):
         # add to mesh
         for i in imglist:
           onemesh.addpoints(i.getpoints());
-        self.meshs.append(mesh)
+        self.meshs.append(onemesh)
         
     def begincapture():
         """ Scans an object """
