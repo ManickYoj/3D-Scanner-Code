@@ -74,11 +74,10 @@ class scan(object):
         imgqueue = q.Queue();
         
         # Construct and initialize a new Thread for processing Images
-        processThread = thread.Thread(target=getimg)
-        processThread.run()
-        
+        processThread = thread.Thread(target=begincapture)
+                
         # Construct and initialize a Mesh object
-        mesh = Mesh()
+        onemesh = Mesh()
         
 		# Setup hardware lock
 		while(self.hardware.isLocked()):
@@ -86,6 +85,12 @@ class scan(object):
 		self.hardware.toggleLock();
 
 		self.hardware.setStepSize(1/self.resolution);
+
+		#begin rotation, returns after one rotation (motor keeps rotating)
+		self.hardware.beginscan();
+
+		#begin taking in images
+		processThread.run()
         
         # Keep checking for new captured images to process
         imglist=[]; 
@@ -100,10 +105,10 @@ class scan(object):
         
         # add to mesh
         for i in imglist:
-          mesh.addpoints(i.getpoint());
+          onemesh.addpoints(i.getpoints());
         self.meshs.append(mesh)
         
-    def getimg():
+    def begincapture():
         """ Scans an object """
 		i=0;
         while(i<2*math.pi):
@@ -113,11 +118,7 @@ class scan(object):
                 
                 # adds a new (imgfile, timestamp) tuple to the queue
                 imgqueue.put(self.hardware.captureimage()); 
-                i=i+(1/self.resolution);           
-          		
-			self.hardware.advanceTurntable();
-			self.mesh.addPoints(newImage.getPointsFromImage());
-            
+                i=i+(1/self.resolution);                     
 
 		if self.verbose:
 			print "Image capture complete.";
