@@ -85,21 +85,26 @@ class Hardware
 
 
 class Image
-	has an image file attribute
-	has a timestamp attribute
+	has an image_array attribute
 
-	public method init(image, timestamp):
-		""" Stores the image and timestamp. """
+	public method init(image_array, time_created):
+		""" 
+		Sets up the class variables for the object.
 
-	public method getpoints((start_timestamp, dTheta/dt)):
+		Arguments:
+		- image_array: a numpy array representing the image.
+		- time_created: the time that the image was taken after the start of the rotation on which it was taken.
+		"""
+
+	public method getpoints(avg_vel):
 		"""
 		Gets a list of points ((x, y, z) tuples) based on filtering the image and transforming from polar to euclidean representation.
 
 		Arguments:
-		- A tuple (start_timestamp, dTheta/dt) of the time the scan rotation started and the angular velocity of the rotation.
+		- avg_vel: the angular velocity of the rotation for this scan.
 
 		Returns :
-		- List of (x,y,z) tuples
+		- List of points as (x,y,z) tuples in euclidean space.
 		"""
 
 
@@ -109,7 +114,7 @@ class Mesh
 	has a name string
 	has a savefolder string
 
-	public method __init__([opt.] name, [opt.] savefolder):
+	public method init([opt.] name, [opt.] savefolder):
 		"""
 		Sets up the class variables for the object.
 
