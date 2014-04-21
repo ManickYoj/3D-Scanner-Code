@@ -21,7 +21,7 @@ class Scan(object):
 		Initilizes the scanner with the given parameters.
 
 		Arguments:
-			- resolution: the desired fidelity of the scan. A resolution of 1 will take 6 images. Defaults to the setresolution default.
+			- resolution: the desired fidelity of the scan. Defaults to the setresolution default.
 			- verbose: a boolean used to run this class with additional output text indicating its current state.
 			- debug: a boolean used to run extra debug operations. Debug mode will automatically enable verbose mode.
 		"""
@@ -39,6 +39,8 @@ class Scan(object):
         self.meshs = [];
 
 
+    # ----- Public Methods ----- #
+
 	def setresolution(self, resolution = None):
 		""" 
 		Sets or resets the resolution of the scan class. 
@@ -55,18 +57,7 @@ class Scan(object):
 			print "Resolution set to " + resolution;
 
 
-	def findhardware(self):
-		""" 
-		Finds the existing instance of hardware and returns a reference to it. 
-
-		Returns: the current instance of the hardware class to use.
-		"""
-
-		#TODO: Actually find the hardware!
-		return hardware.Hardware(1/self.resolution);
-
-
-	def scan(self, lockWaitTime = 1, name = None):
+	def scan(self, lock_wait_time = 1, name = None):
 		"""
 		Performs a single scan.
 
@@ -78,55 +69,37 @@ class Scan(object):
         img_queue = q.Queue();
         
         # Construct and initialize a new Thread for processing Images
-        process_thread = t.Thread(target=begincapture)
+        process_thread = t.Thread(target=self.begincapture, args=imgqueue)
                 
         # Construct and initialize a Mesh object with the name mesh + index, EG mesh0
-        if name = None:
+        if name == None:
         	name = "mesh" + str(len(self.meshs)
         mesh = m.Mesh(name = name)
         
 		# Setup hardware lock
-		while(self.hardware.isLocked()):
-			time.sleep(lockWaitTime);
-		self.hardware.toggleLock();
+		while self.hardware.islocked():
+			time.sleep(lock_wait_time);
+		self.hardware.togglelock();
 
 		#begin rotation, returns after one rotation (motor keeps rotating)
 		self.hardware.beginscan();
 
-		#begin taking in images
-		processthread.run()
-        
-        # Keep checking for new captured images to process
-        imglist=[]; 
-    	while(not imgqueue.empty()):
-          	# process the next image in queue and initializes as new Image
-        	img= image.Image(imgqueue.get());
-            # add to list of processed points
-            imglist.append(img) 
+		#begin taking and processing images
+		process_thread.run()
+        img_list = self.processimgs(img_queue)
 
 		# Release hardware lock
-		self.hardware.toggleLock();
+		self.hardware.togglelock()
         
-        # add to mesh
-        for i in imglist:
-          onemesh.addpoints(i.getpoints());
-        self.meshs.append(onemesh)
-        
-    def begincapture():
-        """ Scans an object """
-		i=0;
-        while(i<2*math.pi):
-          
-			if self.verbose:
-				print "Taking image " + i + " of " + int(2*math.pi/self.resolution);
-                
-                # adds a new (imgfile, timestamp) tuple to the queue
-                imgqueue.put(self.hardware.captureimage()); 
-                i=i+(1/self.resolution);                     
+        # add points from image objects to mesh
+        for i in img_list:
+            mesh.addpoints(i.getpoints())
 
-		if self.verbose:
-			print "Image capture complete.";
+        # add mesh to the meshs list
+        self.meshs.append(mesh)
 
+        if self.verbose:
+        	print "Scan complete. Mesh is in index " + len(meshes)-1 + " of the mesh array."
 
 
 	def exportmesh(self, mesh_index = None, export_file_type = "CSV", filename = None):
@@ -154,8 +127,55 @@ class Scan(object):
 			print "The inputted file type is not supported."
 
 
+    # ----- Private Methods ----- #
+
+    def begincapture(self, img_queue):
+        """ Scans an object """
+
+        i = 0
+        while not self.hardware.isdone():
+          
+			if self.verbose:
+				print "Taking image number " + number
+                
+            # adds a the data to create a new image to the queue
+            img_queue.put(self.hardware.captureimage())
+            time.sleep(100/self.resolution)
+            i += 1
+
+		if self.verbose:
+			print "Image capture complete."
+
+
+	def processimgs(self, img_queue):
+		"""
+		Check for new captured images to process.
+		Returns an img_list of processed image objects once processing is complete. 
+		"""
+        img_list=[];
+    	while not img_queue.empty() and not self.hardware.isdone():
+          	# process the next image in queue and initializes as new Image
+        	img = image.Image(img_queue.get());
+            # add to list of processed points
+            imglist.append(img) 
+
+        return img_list
+
+
+    def findhardware(self):
+		""" 
+		Finds the existing instance of hardware and returns a reference to it. 
+
+		Returns: the current instance of the hardware class to use.
+		"""
+
+		#TODO: Actually find the hardware!
+		return hardware.Hardware(1/self.resolution);
+
+# ----- Unit Testing ----- #
+
 if __name__ == "__main__":
-		s = scan(verbose = True);
+		s = Scan(verbose = True);
 		print "Beginning scan...";
 		s.scan();
-		s.exportMesh();
+		s.exportmesh();
