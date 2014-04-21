@@ -74,7 +74,7 @@ class scan(object):
         imgqueue = q.Queue();
         
         # Construct and initialize a new Thread for processing Images
-        processThread = thread.Thread(target=getimg());
+        processThread = thread.Thread(target=getimg)
         processThread.run()
         
         # Construct and initialize a Mesh object
@@ -104,7 +104,7 @@ class scan(object):
         self.meshs.append(mesh)
         
     def getimg():
-          # Scan an object
+        """ Scans an object """
 		i=0;
         while(i<2*math.pi):
           
@@ -124,7 +124,7 @@ class scan(object):
 
 
 
-	def exportMesh(self, mesh_index = None, export_file_type = "CSV", filename = None):
+	def exportmesh(self, mesh_index = None, export_file_type = "CSV", filename = None):
 		"""
 		Exports the mesh as a file if the requested filetype is supported.
 

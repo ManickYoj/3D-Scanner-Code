@@ -51,46 +51,40 @@ class scan
 
 
 
-class hardwareInterface
+class Hardware
 	""" All methods pretaining to hardware sensing and actuation """
 
 	has a locked boolean attribute
-	has a rotationComplete boolean attribute
+	has an isdone boolean attribute
+	has an avgvel numeric attribute
 
 	public function init()
 		""" Sets up class variables. """
 
-	public function isLocked()
+	public function islocked()
 		""" Returns the value of the the locked attribute. """
 
-	public function toggleLock()
+	public function togglelock()
 		""" Inverts the value of the locked attribute. """
 
-	public function getRotation()
-		""" Returns the value of the current_rotation attribute. """
+	public function isdone()
+		""" Returns the value of the isdone attribute. """
 
-	public function beginScan()
+	public function beginscan()
 		""" 
-		Sets the rotationComplete boolean to false. Begins the turntable's rotation, and returns after the warmup rotation is complete.
-		Begins a thread to track the turntable rotation, stop it when it is done, and set the rotationComplete attribute to True.
-		The turntable continues rotating after this function returns.
+		Starts the turntable rotation and returns once the hardware is prepped to take images.
 		"""
 
-	public getRotationRegression():
-		"""
-		Returns a (timestamp, dTheta/dt) tuple representing the start time of the scan rotation and the speed of the turntable over the
-		scan period.
-		"""
+	public getavgvel():
+		""" Returns the angular velocity of the last. """
 
 	public function captureimage()
 		""" 
-		Takes and returns a picture.
-
-		Arguments: None
+		Takes and returns one image.
 
 		Returns:
-		- an image file (probably a .jpeg)
-		- a timestamp of when the image was taken
+		- a numpy array representing an image
+		- the time it was taken after the image capturing rotation was done
 		"""
 
 
