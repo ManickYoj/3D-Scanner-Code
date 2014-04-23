@@ -34,6 +34,13 @@ class Hardware(object):
         '''Checks to see if table has completed a rotation around'''
         return self.done
         
+    def getavgvel(self):
+        '''calculates and returns the angular velocity based on how long it 
+        takes to rotate the table 2pi rad'''
+        if self.done:        
+            angle_vel= (self.end_time-self.start_time)/ (2*np.pi)
+            return angle_vel
+        
     def checkrotation(self):
         current_time = time.time()- self.start_time
         if current_time >= 13.25 and current_time <= 13.27:        #if the time is after range
@@ -54,14 +61,14 @@ class Hardware(object):
         
         camera: the index of video camera being used [should be 1]'''
         cap = cv2.VideoCapture(camera)         
-        while(not self.done):        
+        while(not self.done):   #continue taking video until done rotating     
             # Take each frame
             _, frame = cap.read()
             t_stamp = time.time()-self.start_time
             self.frames.append((frame, t_stamp))
-            if self.checkrotation():
-                self.stopmotor()             
+            self.checkrotation
             time.sleep(0.01)
+        self.stopmotor #once done, stops the motor
             
     def stopmotor(self):
         self.board.setLow(5)        #where 5 is in place of the motor pin
@@ -74,12 +81,7 @@ class Hardware(object):
             return self.frames(-1)
         return None
                 
-    def getavgvel(self):
-        '''calculates and returns the angular velocity based on how long it 
-        takes to rotate the table 2pi rad'''
-        if self.done:        
-            angle_vel= (self.end_time-self.start_time)/ (2*np.pi)
-            return angle_vel
+
         
         
         
