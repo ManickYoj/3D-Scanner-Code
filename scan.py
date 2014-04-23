@@ -27,15 +27,15 @@ class Scan(object):
 		"""
 
 		# Initilize debug attributes
-		self.debug = debug;
+		self.debug = debug
 		if verbose or debug:
-			self.verbose = True;
+			self.verbose = True
 		else:
-			self.verbose = False;
+			self.verbose = False
 
 		# Initilize class attributes
-		self.setresolution(resolution);
-		self.hardware = self.findhardware();
+		self.setresolution(resolution)
+		self.hardware = self.findhardware()
         self.meshs = [];
 
 
@@ -50,11 +50,11 @@ class Scan(object):
 		"""
 
 		if resolution == None:
-			resolution = 4;
+			resolution = 4
         
-		self.resolution = resolution;
+		self.resolution = resolution
 		if self.verbose:
-			print "Resolution set to " + resolution;
+			print "Resolution set to " + resolution
 
 
 	def scan(self, lock_wait_time = 1, name = None):
@@ -66,7 +66,7 @@ class Scan(object):
 		"""
 
         # Construct and initialize a Queue of tuples of captured images (unprocessed) and time stamps
-        img_queue = q.Queue();
+        img_queue = q.Queue()
         
         # Construct and initialize a new Thread for processing Images
         process_thread = t.Thread(target=self.begincapture, args=imgqueue)
@@ -78,11 +78,11 @@ class Scan(object):
         
 		# Setup hardware lock
 		while self.hardware.islocked():
-			time.sleep(lock_wait_time);
-		self.hardware.togglelock();
+			time.sleep(lock_wait_time)
+		self.hardware.togglelock()
 
 		#begin rotation, returns after one rotation (motor keeps rotating)
-		self.hardware.beginscan();
+		self.hardware.beginscan()
 
 		#begin taking and processing images
 		process_thread.run()
@@ -114,7 +114,7 @@ class Scan(object):
 		#TODO: Actually support these operations in the mesh class
 		#TODO: Support the filepath argument
 
-		export_file_type.upper();
+		export_file_type.upper()
 		
 		if mesh_index is None or mesh_index>len(self.meshs):
 			mesh_index = self.meshs[-1]
@@ -155,7 +155,7 @@ class Scan(object):
         img_list=[];
     	while not img_queue.empty() and not self.hardware.isdone():
           	# process the next image in queue and initializes as new Image
-        	img = image.Image(img_queue.get());
+        	img = image.Image(img_queue.get())
             # add to list of processed points
             imglist.append(img) 
 
@@ -175,7 +175,7 @@ class Scan(object):
 # ----- Unit Testing ----- #
 
 if __name__ == "__main__":
-		s = Scan(verbose = True);
-		print "Beginning scan...";
-		s.scan();
-		s.exportmesh();
+		s = Scan(verbose = True)
+		print "Beginning scan..."
+		s.scan()
+		s.exportmesh()
