@@ -34,7 +34,7 @@ class Hardware(object):
     def isdone(self):
         '''Checks to see if table has completed a rotation around'''
         return self.done
-        
+
     def beginscan(self):
         '''starts the arduino and after one rotation, starts the camera'''
         self.board.setHigh(5)   # Turns on motor
@@ -76,7 +76,7 @@ class Hardware(object):
             t_stamp = time.time()-self.start_time
             self.frames.append((frame, t_stamp))
             if self.checkrotation():
-                self.stopmotor()
+                self.stopmotor()             
             time.sleep(0.01)
             
     def stopmotor(self):
