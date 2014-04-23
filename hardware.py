@@ -76,7 +76,7 @@ class Hardware(object):
             _, frame = cap.read()
             t_stamp = time.time()-self.start_time
             self.frames.append((frame, t_stamp))
-            self.checkrotation
+            self.checkrotation()
             time.sleep(0.01)
         self.stopmotor #once done, stops the motor
             
