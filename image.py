@@ -56,8 +56,8 @@ class Image(object):
         c =[]
         #should create a list of the columns containing redPosition values 
         #in every row
-        for row in range(self.mask.shape(0)):
-            for column in range(self.mask.shape(1)):
+        for row in range(self.mask.shape[0]):
+            for column in range(self.mask.shape[1]):
                 if self.image[row, column] != 0:
                     c.append(column)
             #if redPosition values exist, add them to redPosition otherwise 
@@ -79,9 +79,10 @@ class Image(object):
         them to calculate the depth of the object we are measuring for a 
         single lazer image'''
         for index in range(len(self.redPosition)):
-            yPrime = self.redPosition[index] - self.center
-            depth = self.H*yPrime/self.Y
-            self.radius.append(depth)
+            if self.redPosition(index) != -1:        #If a red value exists:
+                yPrime = self.redPosition[index] - self.center
+                depth = self.H*yPrime/self.Y
+                self.radius.append(depth)
         #Needs more math to stop distortion
         
     def cyltocar(self, r, theta, height):
@@ -92,9 +93,11 @@ class Image(object):
         return (x, y, z)
         
     def findheight(self):
-        '''takes in the y pixle location and transforms to height based on
+        '''takes in the y pixel location and transforms to height based on
         depth of the image and math!'''
-        pass
+        for index in range(len(self.redPosition)):
+            if self.redPosition(index) != -1:
+                self.heights.append((len(self.redPosition)- index) * 0.0208)
     
     def convertangle(self, conversion):
         self.angle = self.timeStamp *conversion
@@ -110,7 +113,7 @@ class Image(object):
             return self.coordinates
             
         
-    
+   
         
 
 

@@ -5,7 +5,7 @@ Created on Mon Apr 21 11:37:47 2014
 @author: koenigin
 """
 
-
+import time
 import serial
 
 class Arduino(object):
@@ -73,6 +73,30 @@ class Arduino(object):
         else:
             return False
 
+    def __exit__(self, type, value, tb):
+        self.turnOff()
+        self.close()
+
     def close(self):
         self.serial.close()
         return True
+        
+        
+if __name__ == '__main__':
+    a = Arduino('/dev/ttyACM0')
+#    a.output([pin for pin in range(11)])
+#    for pin in range(19):
+#        print 'testing pin' + str(pin)
+#
+#        a.setLow(pin)
+#        time.sleep(1)
+#        print a.getState(pin)
+#        a.setHigh(pin)
+#        time.sleep(3)
+#        print a.getState(pin) 
+#        time.sleep(1)
+    a.output([5])
+    time.sleep(0.1)
+    a.setHigh(5)
+    time.sleep(5)
+    a.setLow(5)

@@ -11,6 +11,7 @@ import numpy as np
 import time
 import threading as t
 from arduino import Arduino
+import pickle
 
 
 class Hardware(object):
@@ -22,7 +23,9 @@ class Hardware(object):
         self.end_time = -1
         self.angle_vel = -1
         self.rotation = False 
-        self.board = Arduino('/dev/tty.usbserial')
+        self.board = Arduino('/dev/ttyACM0')
+        self.board.output([5])
+
         
     # ----- Public Functions ----- #
     def islocked(self):
@@ -38,6 +41,7 @@ class Hardware(object):
 
     def beginscan(self):
         '''starts the arduino and after one rotation, starts the camera'''
+        time.sleep(0.2)
         self.board.setHigh(5)   # Turns on motor
         videocap_thread = t.Thread(target = self.videocap)
         time.sleep(2)
@@ -65,12 +69,12 @@ class Hardware(object):
             self.done = True   
         return self.done           
 
-    def videocap(self, camera):
+    def videocap(self):
         '''If not done, will take video and append each frame to a list with 
         the relevant time_stamp
         
         camera: the index of video camera being used [should be 1]'''
-        cap = cv2.VideoCapture(camera)         
+        cap = cv2.VideoCapture(1)         
         while(not self.done):   #continue taking video until done rotating     
             # Take each frame
             _, frame = cap.read()
@@ -78,10 +82,14 @@ class Hardware(object):
             self.frames.append((frame, t_stamp))
             self.checkrotation()
             time.sleep(0.01)
-        self.stopmotor #once done, stops the motor
+        self.stopmotor() #once done, stops the motor
+        with open("test_data.pkl","wb") as dump_file:
+            pickle.dump(self.frames, dump_file)
+        
             
     def stopmotor(self):
         self.board.setLow(5)        #where 5 is in place of the motor pin
+        time.sleep(0.1)
 
 
 if __name__ == '__main__':
