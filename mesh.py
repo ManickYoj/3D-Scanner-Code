@@ -3,13 +3,15 @@ mesh.py
 -------
 Author: Nick Francisci
 Status: Complete & Tested
-Description: 
+Description:
 A storage unit for meshs both as they are scanned and after a scan is complete.
 The mesh class also supports export methods.
 
 """
 
-import csv, os
+import csv
+import os
+
 
 class Mesh(object):
     """
@@ -17,11 +19,11 @@ class Mesh(object):
     export methods.
     """
 
-    def __init__(self, name = None, savefolder = "Exported Meshes"):
+    def __init__(self, name=None, savefolder="Exported Meshes"):
         self.mesh = []
         self.name = name
         self.savefolder = savefolder
-    
+
     # ----- General Public Methods ----- #
 
     def addpoint(self, point):
@@ -56,9 +58,9 @@ class Mesh(object):
 
     # ----- Public Export Methods ----- #
 
-    def exportcsv(self, filename = None):
+    def exportcsv(self, filename=None):
         """ Exports a file in excel CSV format. """
-        
+
         filename = self.assignfilename(filename)
         with open(filename + '.csv', 'wb') as expfile:
             csvwriter = csv.writer(expfile)
@@ -79,7 +81,6 @@ class Mesh(object):
                 filename = "default"
 
         return self.assignfilepath(filename)
-
 
     def assignfilepath(self, filename):
         """

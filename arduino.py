@@ -1,8 +1,11 @@
-# -*- coding: utf-8 -*-
 """
-Created on Mon Apr 21 11:37:47 2014
+arduino.py
+-------
+Author: vascop (GitHub)
+Adapted by: Nick Francisci 
+Status: Complete & Tested
+Description: An interface class to wrap the Arduino serial interface
 
-@author: koenigin
 """
 
 import time
