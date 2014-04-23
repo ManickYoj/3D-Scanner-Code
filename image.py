@@ -1,10 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Mon Apr 14 10:38:43 2014
-
-@author: koenigin
-"""
-
 
 import cv2.cv
 import cv2
@@ -12,9 +6,9 @@ import numpy as np
 
 
 class Image(object):
-
+    
     def __init__(self, tup):
-        self.image = tup[0] #Stores original image
+        self.image = tup[0]         #Stores original image 
         self.copy = tup[0]          #creates an image copy to convert to hsv
         self.mask = []
         self.timeStamp = tup[1]              
@@ -26,13 +20,17 @@ class Image(object):
         self.Y = 5                  #distance in cm b/n cameraline and laser
         self.X = 9.8                #distance in cm from camera to center
         self.H = 10.95              #distance in cm from laser to center 
-        self.center = 'Find and Insert!!!'        
+        self.center = self.calibrateimage()        
         self.filterforredposition()
         self.rememberonlyredposition()
         self.getdepth()
         self.findheight()
+        
+    def calibrateimage(self):
+        test = cv2.cv.CaptureFromCam(1)
+        return test.shape[0]/2
     
-    def filterforredposition(self):
+    def filterforredposition(self): 
         '''will take in the image that the camera has just capturedPosition
         and filter so that only the redPosition remains'''
             
@@ -97,6 +95,7 @@ class Image(object):
         '''takes in the y pixle location and transforms to height based on
         depth of the image and math!'''
         pass
+    
     def convertangle(self, conversion):
         self.angle = self.timeStamp *conversion
         return self.angle        
