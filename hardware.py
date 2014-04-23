@@ -36,17 +36,17 @@ class Hardware(object):
         
     def checkrotation(self):
         current_time = time.time()- self.start_time
-        if current_time >= 13.25 and current_time <= 13.27:        #if the time is within end range
+        if current_time >= 13.25 and current_time <= 13.27:        #if the time is after range
+            self.end_time = time.time()
             self.done = True   
         return self.done        
         
     def beginscan(self):
         '''starts the arduino and after one rotation, starts the camera'''
-        self.board.input([5])
-        self.board.setHigh(5)
-        videocap_thread = t.Thread(target = self.videocap())
+        self.board.setHigh(5)       #turns on motor
+        videocap_thread = t.Thread(target = self.videocap()) 
         time.sleep(2)
-        videocap_thread.run()         
+        videocap_thread.run()         #starts a new thread for video capture so it doesn't stop all processes
 
     def videocap(self, camera):
         '''If not done, will take video and append each frame to a list with 
@@ -60,8 +60,7 @@ class Hardware(object):
             t_stamp = time.time()-self.start_time
             self.frames.append((frame, t_stamp))
             if self.checkrotation():
-                self.stopmotor()
-                self.end_time = time.time()
+                self.stopmotor()             
             time.sleep(0.01)
             
     def stopmotor(self):
