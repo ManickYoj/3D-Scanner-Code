@@ -7,17 +7,28 @@ Created on Mon Apr 21 11:37:47 2014
 
 import time
 import serial
+import sys
+
 
 class Arduino(object):
 
     __OUTPUT_PINS = -1
 
-    def __init__(self, port, baudrate=115200):
+    def __init__(self, port=None, baudrate=115200):
+        if not port:
+            if sys.platform.startswith('win'):
+                port = "COM4"
+            elif sys.platform.startswith('lin'):
+                port = "/dev/ttyACM0"
+            else:
+                print("ERROR: unsupported OS!")
+
         self.serial = serial.Serial(port, baudrate)
         self.serial.write('99')
 
     def __str__(self):
-        return "Arduino is on port %s at %d baudrate" %(self.serial.port, self.serial.baudrate)
+        return "Arduino is on port %s at %d baudrate" % (self.serial.port,
+                                                         self.serial.baudrate)
 
     def output(self, pinArray):
         self.__sendData(len(pinArray))
@@ -80,21 +91,10 @@ class Arduino(object):
     def close(self):
         self.serial.close()
         return True
-        
-        
+
+
 if __name__ == '__main__':
-    a = Arduino('/dev/ttyACM0')
-#    a.output([pin for pin in range(11)])
-#    for pin in range(19):
-#        print 'testing pin' + str(pin)
-#
-#        a.setLow(pin)
-#        time.sleep(1)
-#        print a.getState(pin)
-#        a.setHigh(pin)
-#        time.sleep(3)
-#        print a.getState(pin) 
-#        time.sleep(1)
+    a = Arduino()
     a.output([5])
     time.sleep(0.1)
     a.setHigh(5)

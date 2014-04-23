@@ -23,7 +23,7 @@ class Hardware(object):
         self.end_time = -1
         self.angle_vel = -1
         self.rotation = False 
-        self.board = Arduino('/dev/ttyACM0')
+        self.board = Arduino()
         self.board.output([5])
 
 
@@ -95,6 +95,3 @@ class Hardware(object):
 if __name__ == '__main__':
     test = Hardware()
     test.beginscan()
-        
-        
-    
