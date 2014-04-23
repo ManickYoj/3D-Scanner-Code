@@ -26,14 +26,14 @@ class Hardware(object):
         self.board = Arduino('/dev/ttyACM0')
         self.board.output([5])
 
-        
+
     # ----- Public Functions ----- #
     def islocked(self):
-        return self.locked;
+        return self.locked
 
     def togglelock(self):
-        self.locked = not self.locked;
-      
+        self.locked = not self.locked
+
     def isdone(self):
         '''Checks to see if table has completed a rotation around'''
         return self.done
