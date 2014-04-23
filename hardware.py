@@ -56,8 +56,8 @@ class Hardware(object):
             _, frame = cap.read()
             self.frames.append((frame, time.time()-self.start_time))
             time.sleep(0.1)
-            
-    def captureimage(self):
+           
+     def captureimage(self):
         '''If  scanning is not done, return the last image added to the list
         '''
         if not self.done:
