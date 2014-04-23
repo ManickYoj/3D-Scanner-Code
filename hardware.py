@@ -15,17 +15,17 @@ import pickle
 
 
 class Hardware(object):
-    def __init__(self, step_size = 1, camera = 1):
+
+    def __init__(self, step_size=1, camera=1):
         self.locked = False
         self.start_time = -1
         self.frames = []
         self.done = False
         self.end_time = -1
         self.angle_vel = -1
-        self.rotation = False 
+        self.rotation = False
         self.board = Arduino()
         self.board.output([5])
-
 
     # ----- Public Functions ----- #
     def islocked(self):
