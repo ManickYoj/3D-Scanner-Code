@@ -35,18 +35,17 @@ class Hardware(object):
         return self.done
         
     def checkrotation(self):
-        pin = 11                        #the output pin for the tripsensor
-        self.board.output([pin])
-        self.rotation = self.board.getState(pin)
-        return self.rotation        
+        current_time = time.time()- self.start_time
+        if current_time >= 13.25 and current_time <= 13.27:        #if the time is within end range
+            self.done = True   
+        return self.done        
         
     def beginscan(self):
         '''starts the arduino and after one rotation, starts the camera'''
-        #insert arduino code
+        self.board.input([5])
+        self.board.setHigh(5)
         videocap_thread = t.Thread(target = self.videocap())
-        while(not self.rotation):
-            self.checkrotation()
-            time.sleep(0.01)  
+        time.sleep(2)
         videocap_thread.run()         
 
     def videocap(self, camera):
@@ -60,13 +59,12 @@ class Hardware(object):
             _, frame = cap.read()
             t_stamp = time.time()-self.start_time
             self.frames.append((frame, t_stamp))
-            self.done = self.checkrotation()
-            self.stopmotor()
+            if self.checkrotation():
+                self.stopmotor()
             time.sleep(0.01)
             
     def stopmotor(self):
-        if self.done:
-            self.board.setLow(5)        #where 5 is in place of the motor pin
+        self.board.setLow(5)        #where 5 is in place of the motor pin
             
     
     def captureimage(self):
