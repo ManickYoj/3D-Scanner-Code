@@ -89,11 +89,12 @@ class Scan(object):
         img_list = self.processimgs(img_queue)
 
 		# Release hardware lock
+		avg_vel = hardware.getavgvel()
 		self.hardware.togglelock()
         
         # add points from image objects to mesh
         for i in img_list:
-            mesh.addpoints(i.getpoints())
+            mesh.addpoints(i.getpoints(avg_vel))
 
         # add mesh to the meshs list
         self.meshs.append(mesh)
