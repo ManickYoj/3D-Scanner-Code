@@ -61,6 +61,7 @@ class Hardware(object):
             self.frames.append((frame, t_stamp))
             if self.checkrotation():
                 self.stopmotor()
+                self.end_time = time.time()
             time.sleep(0.01)
             
     def stopmotor(self):
