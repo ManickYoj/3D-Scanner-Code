@@ -12,6 +12,7 @@ import time
 import threading as t
 from arduino import Arduino
 
+
 class Hardware(object):
     def __init__(self, step_size = 1, camera = 1):
         self.locked = False
@@ -23,7 +24,7 @@ class Hardware(object):
         self.rotation = False 
         self.board = Arduino('/dev/ttyUSB0')
         
-        
+    # ----- Public Functions ----- #
     def islocked(self):
         return self.locked;
 
@@ -33,31 +34,40 @@ class Hardware(object):
     def isdone(self):
         '''Checks to see if table has completed a rotation around'''
         return self.done
-        
+
+
+    def beginscan(self):
+        '''starts the arduino and after one rotation, starts the camera'''
+        self.board.setHigh(5)   # Turns on motor
+        videocap_thread = t.Thread(target = self.videocap)
+        time.sleep(2)
+        self.start_time = time.time()
+        videocap_thread.run()
+
+    def captureimage(self):
+        '''If  scanning is not done, return the last image added to the list
+        '''
+        if not self.done:
+            return self.frames(-1)
+        return None
+                
     def getavgvel(self):
         '''calculates and returns the angular velocity based on how long it 
         takes to rotate the table 2pi rad'''
         if self.done:        
             angle_vel= (self.end_time-self.start_time)/ (2*np.pi)
             return angle_vel
-        
+
+    # ----- Private Functions ----- #
     def checkrotation(self):
         current_time = time.time()- self.start_time
-        if current_time >= 13.25 and current_time <= 13.27:        #if the time is after range
-            self.end_time = time.time()
+        if current_time >= 11.25:        #if the time is within end range
             self.done = True   
-        return self.done        
-        
-    def beginscan(self):
-        '''starts the arduino and after one rotation, starts the camera'''
-        self.board.setHigh(5)       #turns on motor
-        videocap_thread = t.Thread(target = self.videocap()) 
-        time.sleep(2)
-        videocap_thread.run()         #starts a new thread for video capture so it doesn't stop all processes
+        return self.done           
 
     def videocap(self, camera):
         '''If not done, will take video and append each frame to a list with 
-        the relevant timestamp
+        the relevant time_stamp
         
         camera: the index of video camera being used [should be 1]'''
         cap = cv2.VideoCapture(camera)         
@@ -72,19 +82,9 @@ class Hardware(object):
             
     def stopmotor(self):
         self.board.setLow(5)        #where 5 is in place of the motor pin
-            
-    
-    def captureimage(self):
-        '''If  scanning is not done, return the last image added to the list
-        '''
-        if not self.done:
-            return self.frames(-1)
-        return None
-                
+
+
 
         
         
-        
-        
-        
-                
+    
