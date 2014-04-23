@@ -10,10 +10,11 @@ import cv2.cv
 import cv2
 import numpy as np
 
+
 class Image(object):
-    
+
     def __init__(self, tup):
-        self.image = tup[0]         #Stores original image 
+        self.image = tup[0] #Stores original image
         self.copy = tup[0]          #creates an image copy to convert to hsv
         self.mask = []
         self.timeStamp = tup[1]              
