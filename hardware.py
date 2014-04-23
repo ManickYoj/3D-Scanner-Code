@@ -23,7 +23,6 @@ class Hardware(object):
         self.angle_vel = -1
         self.rotation = False 
         self.board = Arduino('/dev/ttyUSB0')
-  
     # ----- Public Functions ----- #
     def islocked(self):
         return self.locked
@@ -84,7 +83,9 @@ class Hardware(object):
         self.board.setLow(5)        #where 5 is in place of the motor pin
 
 
-
+if __name__ == '__main__':
+    test = Hardware()
+    test.beginscan()
         
         
     
