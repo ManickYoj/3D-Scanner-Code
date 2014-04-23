@@ -22,7 +22,7 @@ class Hardware(object):
         self.end_time = -1
         self.angle_vel = -1
         self.rotation = False 
-        self.board = Arduino('/dev/ttyUSB0')
+        self.board = Arduino('/dev/tty.usbserial')
         
     # ----- Public Functions ----- #
     def islocked(self):
@@ -84,7 +84,9 @@ class Hardware(object):
         self.board.setLow(5)        #where 5 is in place of the motor pin
 
 
-
+if __name__ == '__main__':
+    test = Hardware()
+    test.beginscan()
         
         
     
