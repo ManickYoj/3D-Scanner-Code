@@ -8,6 +8,7 @@ import numpy as np
 class Image(object):
     
     def __init__(self, tup):
+        print(tup[0])
         self.image = tup[0]         #Stores original image 
         self.copy = tup[0]          #creates an image copy to convert to hsv
         self.mask = []
@@ -25,10 +26,11 @@ class Image(object):
         self.rememberonlyredposition()
         self.getdepth()
         self.findheight()
+        print('initializing image')
         
     def calibrateimage(self):
-        test = cv2.cv.CaptureFromCam(1)
-        return test.shape[0]/2
+        width, height = self.image.shape[:2]
+        return width/2
     
     def filterforredposition(self): 
         '''will take in the image that the camera has just capturedPosition
@@ -73,6 +75,7 @@ class Image(object):
             for value in range(len(self.redPosition[index])):
                 sum += value
             self.redPosition[index] = sum/len(self.redPosition[index])
+        print self.redPosition
             
     def getdepth(self):
         '''Takes in the original camera/lazer position parameters and uses 

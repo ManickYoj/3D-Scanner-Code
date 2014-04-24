@@ -19,7 +19,7 @@ import pickle
 
 class Hardware(object):
 
-    def __init__(self, step_size=1, camera=1, motor_pin=5):
+    def __init__(self, camera=1, motor_pin=5, debug = False):
         self.locked = False
         self.start_time = -1
         self.frames = []
@@ -30,6 +30,8 @@ class Hardware(object):
         self.board = Arduino()
         self.motor_pin = motor_pin
         self.board.output([self.motor_pin])
+        self.debug = debug
+        self.camera = camera
 
     # ----- Public Functions ----- #
     def islocked(self):
@@ -49,13 +51,15 @@ class Hardware(object):
         videocap_thread = t.Thread(target=self.videocap)
         time.sleep(2)
         self.start_time = time.time()
-        videocap_thread.run()
+        videocap_thread.start()
+        time.sleep(0.1)
 
     def captureimage(self):
         '''If  scanning is not done, return the last image added to the list
         '''
-        if not self.done:
-            return self.frames(-1)
+        if not self.done and self.frames:
+            print(self.frames[-1])
+            return self.frames[-1]
         return None
 
     def getavgvel(self):
@@ -70,19 +74,20 @@ class Hardware(object):
         current_time = time.time() - self.start_time
         if current_time >= 11.25:
             self.done = True
-        return self.done
 
     def videocap(self):
         '''If not done, will take video and append each frame to a list with
         the relevant time_stamp
 
         camera: the index of video camera being used [should be 1]'''
-        cap = cv2.VideoCapture(1)
+        cap = cv2.VideoCapture(self.camera)
         while not self.done:  # Take video until rotation is complete
             # Take one frame
             frame = cap.read()
+            frame = frame[1]
             t_stamp = time.time()-self.start_time
             self.frames.append((frame, t_stamp))
+            print(self.frames)
             self.checkrotation()
             time.sleep(0.01)
 
@@ -91,7 +96,7 @@ class Hardware(object):
         # Captures full set of picture arrays and saves them to a debug file
         if self.debug:
             if not os.path.exists("Debug"):
-                os.makedirs(self.savefolder)
+                os.makedirs("Debug")
 
             path = os.path.join("Debug", "debug_frames.pkl")
             with open(path, "wb") as dump_file:
