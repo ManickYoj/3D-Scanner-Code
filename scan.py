@@ -36,7 +36,7 @@ class Scan(object):
         # Initilize class attributes
         self.setresolution(resolution)
         self.hardware = self.findhardware()
-        self.meshs = [];
+        self.meshs = []
 
 
     # ----- Public Methods ----- #
@@ -73,7 +73,7 @@ class Scan(object):
                 
         # Construct and initialize a Mesh object with the name mesh + index, EG mesh0
         if name == None:
-            name = "mesh" + str(len(self.meshs)
+            name = "mesh" + str(len(self.meshs))
         mesh = m.Mesh(name = name)
         
         # Setup hardware lock
@@ -153,7 +153,7 @@ class Scan(object):
         Check for new captured images to process.
         Returns an img_list of processed image objects once processing is complete. 
         """
-        img_list=[];
+        img_list=[]
         while not img_queue.empty() and not self.hardware.isdone():
             # process the next image in queue and initializes as new Image
             img = image.Image(img_queue.get())
@@ -171,7 +171,7 @@ class Scan(object):
         """
 
         #TODO: Actually find the hardware!
-        return hardware.Hardware(1/self.resolution);
+        return hardware.Hardware(1/self.resolution)
 
 # ----- Unit Testing ----- #
 
