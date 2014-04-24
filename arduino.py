@@ -2,7 +2,7 @@
 arduino.py
 -------
 Author: vascop (GitHub)
-Adapted by: Nick Francisci 
+Adapted by: Nick Francisci
 Status: Complete & Tested
 Description: An interface class to wrap the Arduino serial interface
 
