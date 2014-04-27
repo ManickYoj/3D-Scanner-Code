@@ -19,7 +19,7 @@ import pickle
 
 class Hardware(object):
 
-    def __init__(self, camera=1, motor_pin=5, debug = False):
+    def __init__(self, camera=1, motor_pin=4, debug = False):
         self.locked = False
         self.start_time = -1
         self.frames = []
@@ -52,13 +52,13 @@ class Hardware(object):
         time.sleep(2)
         self.start_time = time.time()
         videocap_thread.start()
-        time.sleep(0.1)
+        while len(self.frames)==0:
+            time.sleep(0.01)
 
     def captureimage(self):
         '''If  scanning is not done, return the last image added to the list
         '''
-        if not self.done and self.frames:
-            print(self.frames[-1])
+        if not self.done and self.frames is not None:
             return self.frames[-1]
         return None
 
@@ -84,10 +84,8 @@ class Hardware(object):
         while not self.done:  # Take video until rotation is complete
             # Take one frame
             frame = cap.read()
-            frame = frame[1]
             t_stamp = time.time()-self.start_time
-            self.frames.append((frame, t_stamp))
-            print(self.frames)
+            self.frames.append((frame[1], t_stamp))
             self.checkrotation()
             time.sleep(0.01)
 
@@ -111,3 +109,4 @@ class Hardware(object):
 if __name__ == '__main__':
     test = Hardware()
     test.beginscan()
+    

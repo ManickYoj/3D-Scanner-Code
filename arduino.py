@@ -98,8 +98,9 @@ class Arduino(object):
 
 if __name__ == '__main__':
     a = Arduino()
-    a.output([5])
+    a.output([4, 14])
     time.sleep(0.1)
-    a.setHigh(5)
-    time.sleep(5)
-    a.setLow(5)
+    a.setHigh(4)
+    #a.analogWrite(14,255)
+    time.sleep(10)
+    a.setLow(4)

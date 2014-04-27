@@ -8,9 +8,7 @@ import numpy as np
 class Image(object):
     
     def __init__(self, tup):
-        print(tup[0])
         self.image = tup[0]         #Stores original image 
-        self.copy = tup[0]          #creates an image copy to convert to hsv
         self.mask = []
         self.timeStamp = tup[1]              
         self.redPosition = []
@@ -21,15 +19,16 @@ class Image(object):
         self.Y = 5                  #distance in cm b/n cameraline and laser
         self.X = 9.8                #distance in cm from camera to center
         self.H = 10.95              #distance in cm from laser to center 
+        print('initializing image')        
         self.center = self.calibrateimage()        
         self.filterforredposition()
         self.rememberonlyredposition()
         self.getdepth()
         self.findheight()
-        print('initializing image')
+        
         
     def calibrateimage(self):
-        width, height = self.image.shape[:2]
+        width = len(self.image)
         return width/2
     
     def filterforredposition(self): 
@@ -37,7 +36,7 @@ class Image(object):
         and filter so that only the redPosition remains'''
             
         # Convert BGR to HSVimage
-        hsv = cv2.cvtColor(self.copy, cv2.COLOR_BGR2HSV)
+        hsv = cv2.cvtColor(self.image, cv2.COLOR_BGR2HSV)
         
         # define range of laser color in HSV        
         lower_redPosition = np.array([0,100,100])
@@ -55,12 +54,12 @@ class Image(object):
     def rememberonlyredposition(self):
         '''Takes in an image and returns a list of the the average 
         redPosition position in each row'''
-        c =[]
         #should create a list of the columns containing redPosition values 
         #in every row
         for row in range(self.mask.shape[0]):
+            c =[]
             for column in range(self.mask.shape[1]):
-                if self.image[row, column] != 0:
+                if self.mask[row, column] != 0:
                     c.append(column)
             #if redPosition values exist, add them to redPosition otherwise 
             #add the number 0 to redPosition
@@ -68,13 +67,14 @@ class Image(object):
                 self.redPosition.append(c)
             else:
                 self.redPosition.append(-1)
-        for index in len(self.redPosition):
+        for index in range(len(self.redPosition)):
             #should keep just the average value for the rows that redPosition
             #exists, in every column
-            sum = 0
+            sum1 = 0
             for value in range(len(self.redPosition[index])):
-                sum += value
-            self.redPosition[index] = sum/len(self.redPosition[index])
+                sum1 += self.redPosition[index][value]
+            
+            self.redPosition[index] = float(sum1)/len(self.redPosition[index])
         print self.redPosition
             
     def getdepth(self):
@@ -82,10 +82,10 @@ class Image(object):
         them to calculate the depth of the object we are measuring for a 
         single lazer image'''
         for index in range(len(self.redPosition)):
-            if self.redPosition(index) != -1:        #If a red value exists:
+            if self.redPosition[index] != -1:        #If a red value exists:
                 yPrime = self.redPosition[index] - self.center
                 depth = self.H*yPrime/self.Y
-                self.radius.append(depth)
+                self.radii.append(depth)
         #Needs more math to stop distortion
         
     def cyltocar(self, r, theta, height):
@@ -99,7 +99,7 @@ class Image(object):
         '''takes in the y pixel location and transforms to height based on
         depth of the image and math!'''
         for index in range(len(self.redPosition)):
-            if self.redPosition(index) != -1:
+            if self.redPosition[index] != -1:
                 self.heights.append((len(self.redPosition)- index) * 0.0208)
     
     def convertangle(self, conversion):

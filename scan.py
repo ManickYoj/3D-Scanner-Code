@@ -12,6 +12,7 @@ import hardware, image, time
 import mesh as m
 import Queue as q
 import threading as t
+import cv2 
 
 class Scan(object):
     """ The wrapper class for the program. """
@@ -101,6 +102,8 @@ class Scan(object):
 
         if self.verbose:
             print "Scan complete. Mesh is in index " + str(len(self.meshs)-1) + " of the mesh array."
+            
+        self.exportmesh()
 
 
     def exportmesh(self, mesh_index = None, export_file_type = "CSV", filename = None):
@@ -136,8 +139,10 @@ class Scan(object):
                 print "Taking image number " + str(i)
                 
             # adds a the data to create a new image to the queue
-            img_queue.put(self.hardware.captureimage())
-            print img_queue
+            new_image=self.hardware.captureimage()
+#            cv2.imshow('frame', new_image[0])
+#            cv2.waitKey(0)
+            img_queue.put(new_image)
             time.sleep(100/self.resolution)
             i += 1
 
