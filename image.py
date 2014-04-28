@@ -63,10 +63,10 @@ class Image(object):
                     c.append(column)
             #if redPosition values exist, add them to redPosition otherwise 
             #add the number 0 to redPosition
-            if len(c) >= 0:
+            if len(c) > 0:
                 self.redPosition.append(c)
             else:
-                self.redPosition.append(-1)
+                self.redPosition.append([-1])
         for index in range(len(self.redPosition)):
             #should keep just the average value for the rows that redPosition
             #exists, in every column
@@ -115,9 +115,7 @@ class Image(object):
                                                   self.heights[index]))
             return self.coordinates
             
-        
-   
-        
+
 
 
             
