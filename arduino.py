@@ -22,7 +22,7 @@ class Arduino(object):
             if sys.platform.startswith('win'):
                 port = "COM4"
             elif sys.platform.startswith('lin'):
-                port = "/dev/ttyACM0"
+                port = "/dev/ttyACM1"
             else:
                 print("ERROR: unsupported OS!")
 

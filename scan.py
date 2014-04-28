@@ -51,7 +51,7 @@ class Scan(object):
         """
 
         if resolution == None:
-            resolution = 4
+            resolution = 5.0
         
         self.resolution = resolution
         if self.verbose:
@@ -136,14 +136,13 @@ class Scan(object):
         while not self.hardware.isdone():
           
             if self.verbose:
-                print "Taking image number " + str(i)
-                
+                print "Taking image number " + str(i)                
             # adds a the data to create a new image to the queue
             new_image=self.hardware.captureimage()
 #            cv2.imshow('frame', new_image[0])
 #            cv2.waitKey(0)
             img_queue.put(new_image)
-            time.sleep(100/self.resolution)
+            time.sleep(1/self.resolution)
             i += 1
 
         if self.verbose:
@@ -161,6 +160,7 @@ class Scan(object):
             # process the next image in queue and initializes as new Image
             if not img_queue.empty():
                 img = image.Image(img_queue.get())
+                print(".")
                 # add to list of processed points
                 img_list.append(img) 
 

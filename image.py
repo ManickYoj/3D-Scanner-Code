@@ -39,7 +39,7 @@ class Image(object):
         hsv = cv2.cvtColor(self.image, cv2.COLOR_BGR2HSV)
         
         # define range of laser color in HSV        
-        lower_redPosition = np.array([0,100,100])
+        lower_redPosition = np.array([0,100,170])
         upper_redPosition = np.array([45,255,255])
         
         # Threshold the HSV image to get only laser colors
@@ -49,6 +49,8 @@ class Image(object):
         closed_mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
         # Bitwise-AND mask and original image
         self.mask = closed_mask
+#        cv2.imshow('mask', self.mask)
+#        cv2.waitKey(0)
 
 
     def rememberonlyredposition(self):
@@ -75,8 +77,7 @@ class Image(object):
                 sum1 += self.redPosition[index][value]
             
             self.redPosition[index] = float(sum1)/len(self.redPosition[index])
-        print self.redPosition
-            
+
     def getdepth(self):
         '''Takes in the original camera/lazer position parameters and uses 
         them to calculate the depth of the object we are measuring for a 
@@ -113,7 +114,13 @@ class Image(object):
             self.coordinates.append(self.cyltocar(self.radii[index], 
                                                   self.convertangle(factor), 
                                                   self.heights[index]))
-            return self.coordinates
+        return self.coordinates
+        
+if __name__ == '__main__':
+    pic = cv2.cv.CaptureFromCAM(1)
+    img = cv2.cv.QueryFrame(pic)
+    cv2.cv.SaveImage('Callibration.jpg', img)
+    
             
 
 
