@@ -67,7 +67,7 @@ class Hardware(object):
         takes to rotate the table 2pi rad'''
         if self.done:
             if self.end_time != -1:
-                angle_vel = (2*np.pi)/(self.end_time-self.start_time)
+                angle_vel = (2*3.1415)/(self.end_time-self.start_time)
                 return angle_vel
 
     # ----- Private Functions ----- #

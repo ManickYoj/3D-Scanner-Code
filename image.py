@@ -3,6 +3,7 @@
 import cv2.cv
 import cv2
 import numpy as np
+import matplotlib.pyplot as mat
 
 
 class Image(object):
@@ -45,8 +46,9 @@ class Image(object):
         closed_mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
         # Bitwise-AND mask and original image
         self.mask = closed_mask
-#        cv2.imshow('mask', self.mask)
-#        cv2.waitKey(0)
+        cv2.imshow('mask', self.mask)
+        cv2.waitKey(0)
+        print self.mask[100]
 
     def rememberonlyredposition(self):
         '''Takes in an image and returns a list of the the average 
@@ -54,24 +56,21 @@ class Image(object):
         #should create a list of the columns containing redPosition values 
         #in every row
         for row in range(self.mask.shape[0]):
-            c =[]
+            total = 0
+            num_col = 0
             for column in range(self.mask.shape[1]):
                 if self.mask[row, column] != 0:
-                    c.append(column)
-            #if redPosition values exist, add them to redPosition otherwise 
-            #add the number 0 to redPosition
-            if len(c) > 0:
-                self.redPosition.append(c)
-            else:
-                self.redPosition.append([-1])
-        for index in range(len(self.redPosition)):
-            #should keep just the average value for the rows that redPosition
-            #exists, in every column
-            sum1 = 0
-            for value in range(len(self.redPosition[index])):
-                sum1 += self.redPosition[index][value]
+                    num_col += 1
+                    total += column
+         #if redPosition values exist, add them to redPosition otherwise 
+         #add the number 0 to redPosition
+            if num_col != 0:
+                self.redPosition.append(total/num_col)
+            else: 
+                self.redPosition.append(-1)
             
-            self.redPosition[index] = float(sum1)/len(self.redPosition[index])
+#        mat.plot(self.redPosition)
+#        mat.show()
 
 
     def getdepth(self):
@@ -83,6 +82,7 @@ class Image(object):
                 yPrime = self.redPosition[index] - self.center
                 depth = ((self.H*yPrime)/self.Y)
                 self.radii.append(depth)
+        print self.radii
         #Needs more math to stop distortion
         
     def cyltocar(self, r, theta, height):
@@ -120,6 +120,8 @@ if __name__ == '__main__':
     cv2.imshow('show', img)
     cv2.cv.WaitKey(0)
     test = Image((img, 0.1))
+    mat.plot(test.radii, '.')
+    mat.show()
     
 
     
