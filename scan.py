@@ -51,7 +51,7 @@ class Scan(object):
         """
 
         if resolution == None:
-            resolution = 5.0
+            resolution = 4.0
         
         self.resolution = resolution
         if self.verbose:

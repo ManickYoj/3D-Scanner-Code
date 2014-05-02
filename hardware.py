@@ -66,13 +66,15 @@ class Hardware(object):
         '''calculates and returns the angular velocity based on how long it
         takes to rotate the table 2pi rad'''
         if self.done:
-            angle_vel = (self.end_time-self.start_time) / (2*np.pi)
-            return angle_vel
+            if self.end_time != -1:
+                angle_vel = (2*np.pi)/(self.end_time-self.start_time)
+                return angle_vel
 
     # ----- Private Functions ----- #
     def checkrotation(self):
         current_time = time.time() - self.start_time
-        if current_time >= 11.25:
+        if current_time >= 17:
+            self.end_time = time.time()
             self.done = True
 
     def videocap(self):
@@ -81,11 +83,14 @@ class Hardware(object):
 
         camera: the index of video camera being used [should be 1]'''
         cap = cv2.VideoCapture(self.camera)
+        n = 0
         while not self.done:  # Take video until rotation is complete
             # Take one frame
             frame = cap.read()
             t_stamp = time.time()-self.start_time
             self.frames.append((frame[1], t_stamp))
+#            cv2.imwrite(os.path.join('Images', 'mTapepic'+str(n)+'.jpg'), frame[1])
+#            n+=1
             self.checkrotation()
             time.sleep(0.01)
 
@@ -107,6 +112,6 @@ class Hardware(object):
 
 # ----- Unit Testing ------ #
 if __name__ == '__main__':
-    test = Hardware()
-    test.beginscan()
+    pass
+    
     

@@ -20,16 +20,12 @@ class Image(object):
         self.X = 9.8                #distance in cm from camera to center
         self.H = 10.95              #distance in cm from laser to center 
         print('initializing image')        
-        self.center = self.calibrateimage()        
+        self.center = 350           #Measured number        
         self.filterforredposition()
         self.rememberonlyredposition()
         self.getdepth()
         self.findheight()
         
-        
-    def calibrateimage(self):
-        width = len(self.image)
-        return width/2
     
     def filterforredposition(self): 
         '''will take in the image that the camera has just capturedPosition
@@ -39,8 +35,8 @@ class Image(object):
         hsv = cv2.cvtColor(self.image, cv2.COLOR_BGR2HSV)
         
         # define range of laser color in HSV        
-        lower_redPosition = np.array([0,100,170])
-        upper_redPosition = np.array([45,255,255])
+        lower_redPosition = np.array([0,0,50])
+        upper_redPosition = np.array([200,100,255])
         
         # Threshold the HSV image to get only laser colors
         mask = cv2.inRange(hsv, np.uint8(lower_redPosition), 
@@ -51,7 +47,6 @@ class Image(object):
         self.mask = closed_mask
 #        cv2.imshow('mask', self.mask)
 #        cv2.waitKey(0)
-
 
     def rememberonlyredposition(self):
         '''Takes in an image and returns a list of the the average 
@@ -78,6 +73,7 @@ class Image(object):
             
             self.redPosition[index] = float(sum1)/len(self.redPosition[index])
 
+
     def getdepth(self):
         '''Takes in the original camera/lazer position parameters and uses 
         them to calculate the depth of the object we are measuring for a 
@@ -85,7 +81,7 @@ class Image(object):
         for index in range(len(self.redPosition)):
             if self.redPosition[index] != -1:        #If a red value exists:
                 yPrime = self.redPosition[index] - self.center
-                depth = self.H*yPrime/self.Y
+                depth = ((self.H*yPrime)/self.Y)
                 self.radii.append(depth)
         #Needs more math to stop distortion
         
@@ -101,7 +97,9 @@ class Image(object):
         depth of the image and math!'''
         for index in range(len(self.redPosition)):
             if self.redPosition[index] != -1:
-                self.heights.append((len(self.redPosition)- index) * 0.0208)
+                #Turns the index into a height, below is no longer an index
+                self.heights.append(index)
+
     
     def convertangle(self, conversion):
         self.angle = self.timeStamp *conversion
@@ -113,13 +111,17 @@ class Image(object):
         for index in range(len(self.radii)):
             self.coordinates.append(self.cyltocar(self.radii[index], 
                                                   self.convertangle(factor), 
-                                                  self.heights[index]))
+                                                  self.heights[len(self.heights)-1 - index]))
         return self.coordinates
         
 if __name__ == '__main__':
-    pic = cv2.cv.CaptureFromCAM(1)
-    img = cv2.cv.QueryFrame(pic)
-    cv2.cv.SaveImage('Callibration.jpg', img)
+    cam = cv2.VideoCapture(1)
+    s, img = cam.read() 
+    cv2.imshow('show', img)
+    cv2.cv.WaitKey(0)
+    test = Image((img, 0.1))
+    
+
     
             
 
