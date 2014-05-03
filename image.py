@@ -4,7 +4,9 @@ import cv2.cv
 import cv2
 import numpy as np
 import matplotlib.pyplot as mat
-
+from mpl_toolkits.mplot3d import Axes3D
+import mesh
+import math
 
 class Image(object):
     
@@ -46,9 +48,8 @@ class Image(object):
         closed_mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel)
         # Bitwise-AND mask and original image
         self.mask = closed_mask
-        cv2.imshow('mask', self.mask)
-        cv2.waitKey(0)
-        print self.mask[100]
+#        cv2.imshow('mask', self.mask)
+#        cv2.waitKey(0)
 
     def rememberonlyredposition(self):
         '''Takes in an image and returns a list of the the average 
@@ -56,22 +57,24 @@ class Image(object):
         #should create a list of the columns containing redPosition values 
         #in every row
         for row in range(self.mask.shape[0]):
-            total = 0
-            num_col = 0
+            total = []
             for column in range(self.mask.shape[1]):
-                if self.mask[row, column] != 0:
-                    num_col += 1
-                    total += column
-         #if redPosition values exist, add them to redPosition otherwise 
-         #add the number 0 to redPosition
-            if num_col != 0:
-                self.redPosition.append(total/num_col)
+                if self.mask[row][column] == 255:
+                    total.append(column)
+            #if there are red values in that row append median to redPosition
+            if len(total) != 0:
+                self.redPosition.append(np.median(total))
             else: 
                 self.redPosition.append(-1)
+        for val in range(len(self.redPosition)-1,-1):
+            if self.redPosition[val+1]-self.redPosition[val] > 20:
+                self.redPosition.pop(val)
             
-#        mat.plot(self.redPosition)
+            
+#        mat.plot(self.redPosition, '.')
 #        mat.show()
 
+    
 
     def getdepth(self):
         '''Takes in the original camera/lazer position parameters and uses 
@@ -82,13 +85,13 @@ class Image(object):
                 yPrime = self.redPosition[index] - self.center
                 depth = ((self.H*yPrime)/self.Y)
                 self.radii.append(depth)
-        print self.radii
+#        print self.radii
         #Needs more math to stop distortion
         
     def cyltocar(self, r, theta, height):
         '''takes in cylindrical coordinates and converts to cartesian'''
-        x = r*np.cos(theta)
-        y = r*np.sin(theta)
+        x = r*math.cos(theta)
+        y = r*math.sin(theta)
         z = height
         return (x, y, z)
         
@@ -115,14 +118,32 @@ class Image(object):
         return self.coordinates
         
 if __name__ == '__main__':
-    cam = cv2.VideoCapture(1)
-    s, img = cam.read() 
-    cv2.imshow('show', img)
-    cv2.cv.WaitKey(0)
-    test = Image((img, 0.1))
-    mat.plot(test.radii, '.')
-    mat.show()
-    
+#    cam = cv2.VideoCapture(1)
+#    s, img = cam.read() 
+#    test = Image((img, 0.1))
+#    mat.plot(test.radii, '.')
+#    mat.show()
+    test_mesh = mesh.Mesh(name = 'test_mesh')
+    for index in range(210):
+        x = []
+        y = []
+        z = []
+        img = cv2.imread('Images/boxpic'+str(index)+'.jpg')
+        t = index
+        test = Image((img, t))
+        height = [len(test.redPosition)-i for i in range(len(test.redPosition))]
+        all_points= test.getpoints(2*3.1415/246)
+        test_mesh.addpoints(all_points)
+    test_mesh.exportcsv()
+    print('exported')
+#    fig = mat.figure()
+#    ax = fig.add_subplot(111, projection = '3d')
+#    mat.hold()
+#    mat.hold(True)
+#    Axes3D.scatter(ax, x,y,z)
+#    mat.show()
+
+
 
     
             

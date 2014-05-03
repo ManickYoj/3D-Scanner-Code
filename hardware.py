@@ -19,7 +19,7 @@ import pickle
 
 class Hardware(object):
 
-    def __init__(self, camera=1, motor_pin=4, debug = False):
+    def __init__(self, camera=0, motor_pin=4, debug = False):
         self.locked = False
         self.start_time = -1
         self.frames = []
@@ -68,12 +68,14 @@ class Hardware(object):
         if self.done:
             if self.end_time != -1:
                 angle_vel = (2*3.1415)/(self.end_time-self.start_time)
+                print self.end_time-self.start_time                
+                print angle_vel
                 return angle_vel
 
     # ----- Private Functions ----- #
     def checkrotation(self):
         current_time = time.time() - self.start_time
-        if current_time >= 17:
+        if current_time >= 13:
             self.end_time = time.time()
             self.done = True
 
@@ -100,7 +102,7 @@ class Hardware(object):
         if self.debug:
             if not os.path.exists("Debug"):
                 os.makedirs("Debug")
-
+c
             path = os.path.join("Debug", "debug_frames.pkl")
             with open(path, "wb") as dump_file:
                 pickle.dump(self.frames, dump_file)

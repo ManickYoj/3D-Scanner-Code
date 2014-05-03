@@ -51,7 +51,7 @@ class Scan(object):
         """
 
         if resolution == None:
-            resolution = 4.0
+            resolution = 6.0
         
         self.resolution = resolution
         if self.verbose:
@@ -133,17 +133,19 @@ class Scan(object):
     def begincapture(self, img_queue):
         """ Scans an object """
         i = 0
-        while not self.hardware.isdone():
-          
-            if self.verbose:
-                print "Taking image number " + str(i)                
-            # adds a the data to create a new image to the queue
-            new_image=self.hardware.captureimage()
+        while True:
+            if self.hardware.isdone():
+                #print "Taking image number " + str(i)                
+                # adds a the data to create a new image to the queue
+                print("Getting Images from Hardware")
+                for i in range(0,len(self.hardware.frames),3):
+                    new_image=self.hardware.frames[i]
+                    img_queue.put(new_image)
 #            cv2.imshow('frame', new_image[0])
 #            cv2.waitKey(0)
-            img_queue.put(new_image)
-            time.sleep(1/self.resolution)
-            i += 1
+                break
+                
+            time.sleep(1)
 
         if self.verbose:
             print "Image capture complete."
@@ -155,9 +157,11 @@ class Scan(object):
         Returns an img_list of processed image objects once processing is complete. 
         """
         img_list=[]
+        while img_queue.empty():
+            time.sleep(1)        
         
         while not img_queue.empty() or not self.hardware.isdone():
-            # process the next image in queue and initializes as new Image
+                # process the next image in queue and initializes as new Image
             if not img_queue.empty():
                 img = image.Image(img_queue.get())
                 print(".")
@@ -183,5 +187,6 @@ if __name__ == "__main__":
         s = Scan(debug = True)
         print "Beginning scan..."
         s.scan()
-        print(s.meshs[0].mesh)
+#        print(s.meshs[0].mesh)
         s.exportmesh()
+    
