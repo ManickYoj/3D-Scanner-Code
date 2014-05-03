@@ -14,6 +14,7 @@ import os
 
 
 class Mesh(object):
+
     """
     An object for holding a mesh before it is exported and providing those
     export methods.
@@ -31,25 +32,19 @@ class Mesh(object):
         self.mesh.append(point)
 
     def addpoints(self, points):
-        """ 
-        Adds a list of tuples of points's (x,y,z) values onto the mesh object. 
-        """
+        """ Adds a list of tuples of points's (x,y,z) values onto the mesh object. """
         self.mesh.extend(points)
 
     def setname(self, name):
-        """ 
-        Setter method for an optional name field for a potential GUI feature. 
-        """
+        """ Setter method for an optional name field for a potential GUI feature. """
         self.name = name
 
     def getname(self):
-        """
-        Getter method for an optional name field for potential GUI feature.
-        """
+        """ Getter method for an optional name field for potential GUI feature. """
         return self.name
 
     def setsavefolder(self, savefolder):
-        """ 
+        """
         Setter method for the field that determines the name of the directory in
         which this mesh is saved.
         """
@@ -108,10 +103,8 @@ def runtests():
     testmesh.addpoints([(134, 23, 34), (32, 17, 35)])
     testmesh.exportcsv()
 
-    print testmesh.getname()
-    print testmesh.mesh
+    print(testmesh.getname())
+    print(testmesh.mesh)
 
 if __name__ == "__main__":
     runtests()
-
-
