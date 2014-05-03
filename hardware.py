@@ -102,7 +102,6 @@ class Hardware(object):
         if self.debug:
             if not os.path.exists("Debug"):
                 os.makedirs("Debug")
-c
             path = os.path.join("Debug", "debug_frames.pkl")
             with open(path, "wb") as dump_file:
                 pickle.dump(self.frames, dump_file)
