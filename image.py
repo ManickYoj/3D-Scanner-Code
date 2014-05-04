@@ -27,7 +27,7 @@ class Image(object):
         self.filterforredposition()
         self.rememberonlyredposition()
         self.getdepth()
-        self.findheight()
+#        self.findheight()
         
     
     def filterforredposition(self): 
@@ -84,7 +84,9 @@ class Image(object):
             if self.redPosition[index] != -1:        #If a red value exists:
                 yPrime = self.redPosition[index] - self.center
                 depth = ((self.H*yPrime)/self.Y)
-                self.radii.append(depth)
+                if 5 < depth < 500 or -500 < depth < -5: 
+                    self.radii.append(depth)
+                    self.heights.append(len(self.redPosition)-1-index)
 #        print self.radii
         #Needs more math to stop distortion
         
@@ -95,13 +97,13 @@ class Image(object):
         z = height
         return (x, y, z)
         
-    def findheight(self):
-        '''takes in the y pixel location and transforms to height based on
-        depth of the image and math!'''
-        for index in range(len(self.redPosition)):
-            if self.redPosition[index] != -1:
-                #Turns the index into a height, below is no longer an index
-                self.heights.append(index)
+#    def findheight(self):
+#        '''takes in the y pixel location and transforms to height based on
+#        depth of the image and math!'''
+#        for index in range(len(self.redPosition)):
+#            if self.redPosition[index] != -1 or self.redPosition[index] > 500:
+#                #Turns the index into a height, below is no longer an index
+#                self.heights.append(index)
 
     
     def convertangle(self, conversion):
@@ -114,7 +116,7 @@ class Image(object):
         for index in range(len(self.radii)):
             self.coordinates.append(self.cyltocar(self.radii[index], 
                                                   self.convertangle(factor), 
-                                                  self.heights[len(self.heights)-1 - index]))
+                                                  self.heights[index]))
         return self.coordinates
         
 if __name__ == '__main__':
