@@ -251,6 +251,6 @@ class Scan(object):
 
 # ----- Unit Testing ----- #
 if __name__ == "__main__":
-        s = Scan(resolution=5, smoothing_factor=1, debug=True)
+        s = Scan(resolution=1, smoothing_factor=1, debug=True)
         s.scan()
         s.exportmesh()

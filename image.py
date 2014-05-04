@@ -85,12 +85,12 @@ class Image(object):
             if self.redPosition[index] != -1:        #If a red value exists:
                 yPrime = self.redPosition[index] - self.center
                 depth = ((self.H*yPrime)/self.Y)
-                if 5 < np.abs(depth) < 500:
-                    self.radii.append(depth)
-                    self.heights.append(index)
-                elif np.abs(depth) < 5:
-                    self.counter +=1
-#        print self.radii
+#                if 5 < np.abs(depth) < 500:
+                self.radii.append(depth)
+                self.heights.append(index)
+#                elif np.abs(depth) < 5:
+#                    self.counter +=1
+        print self.radii
         #Needs more math to stop distortion
         
     def cyltocar(self, r, theta, height):
