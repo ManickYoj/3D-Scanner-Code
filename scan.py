@@ -66,12 +66,6 @@ class Scan(object):
             - lockWaitTime: the amount of time for the scanner to wait between attempts to access the hardware.
         """
 
-        # Construct and initialize a Queue of tuples of captured images (unprocessed) and time stamps
-        img_queue = q.Queue()
-
-        # Construct and initialize a new Thread for processing Images
-        process_thread = t.Thread(target=self.begincapture, args=[img_queue])
-
         # Construct and initialize a Mesh object with the name mesh + index, EG mesh0
         if name is None:
             name = "mesh" + str(len(self.meshs))
@@ -82,28 +76,27 @@ class Scan(object):
             time.sleep(lock_wait_time)
         self.hardware.togglelock()
 
-        #begin rotation, returns after one rotation (motor keeps rotating)
+        # Begin turntable rotation and start videocamera
         self.hardware.beginscan()
 
-        #begin taking and processing images
-        process_thread.start()
+        #  Begin taking images at regular intrevals and processing when possible
+        img_queue = q.Queue()
+        t.Thread(target=self.begincapture, args=[img_queue]).start()
         img_list = self.processimgs(img_queue)
 
-        # Release hardware lock
+        # Collect average velocity from the hardware and release hardware lock
         avg_vel = self.hardware.getavgvel()
         self.hardware.togglelock()
 
-        # add points from image objects to mesh
+        # Add points from image objects to mesh
         for i in img_list:
             mesh.addpoints(i.getpoints(avg_vel))
 
-        # add mesh to the meshs list
+        # Add mesh to the meshs list
         self.meshs.append(mesh)
 
         if self.verbose:
             print("Scan complete. Mesh is in index " + str(len(self.meshs)-1) + " of the mesh array.")
-
-        self.exportmesh()
 
     def exportmesh(self, mesh_index=None, export_file_type="CSV", filename=None):
         """
@@ -172,7 +165,8 @@ class Scan(object):
 
 # ----- Unit Testing ----- #
 if __name__ == "__main__":
-        s = Scan(debug=True)
+        s = Scan(resolution=3, debug=True)
+
         print("Beginning scan...")
         s.scan()
         s.exportmesh()
