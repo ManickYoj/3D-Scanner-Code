@@ -2,7 +2,7 @@
 scan.py
 -------
 Author: Nick Francisci & Celine Ta
-Status: Incomplete & Untested
+Status: Complete & Tested
 Description:
 The main class for an instance of the scanning program.
 
