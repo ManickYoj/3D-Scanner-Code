@@ -33,6 +33,8 @@ class Mesh(object):
 
     def addpoints(self, points):
         """ Adds a list of tuples of points's (x,y,z) values onto the mesh object. """
+        while isinstance(points[0], list):
+            points = [item for sublist in points for item in sublist]
         self.mesh.extend(points)
 
     def setname(self, name):
@@ -101,7 +103,8 @@ def runtests():
 
     testmesh.addpoint((15, 23, 34))
     testmesh.addpoints([(134, 23, 34), (32, 17, 35)])
-    testmesh.exportcsv()
+    testmesh.addpoints([[(156, 76, 324), (162, 32, 41)], [(23, 432, 76), (210, 743, 23)]])
+    #testmesh.exportcsv()
 
     print(testmesh.getname())
     print(testmesh.mesh)
