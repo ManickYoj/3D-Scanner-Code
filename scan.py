@@ -20,7 +20,7 @@ class Scan(object):
 
     """ The wrapper class for the program. """
 
-    def __init__(self, resolution=None, verbose=False, debug=False):
+    def __init__(self, resolution=None, smoothing_factor=1, verbose=False, debug=False):
         """
         Initilizes the scanner with the given parameters.
 
@@ -39,6 +39,7 @@ class Scan(object):
 
         # Initilize class attributes
         self.setresolution(resolution)
+        self.smoothing_factor = smoothing_factor
         self.hardware = self.findhardware()
         self.meshs = []
 
@@ -88,9 +89,8 @@ class Scan(object):
         avg_vel = self.hardware.getavgvel()
         self.hardware.togglelock()
 
-        # Add points from image objects to mesh
-        for i in img_list:
-            mesh.addpoints(i.getpoints(avg_vel))
+        # Add points from image objects to mesh with a smoothing filter
+        self.mesh.addpoints(self.smoothedpoints(img_list, avg_vel))
 
         # Add mesh to the meshs list
         self.meshs.append(mesh)
@@ -163,9 +163,90 @@ class Scan(object):
         #TODO: Actually find the hardware!
         return hardware.Hardware(debug=self.debug)
 
+    # ----- Private Smoothing Methods ----- #
+    def smoothedpoints(self, img_list, avg_vel):
+        """
+        Given the list of images, returns a set of points with a smoothing filter applied
+        that averages adjacent points over a width given by the self.smoothing_factor.
+        Warning: This could potentially be a very time consuming operation.
+        """
+        if self.debug:
+            print("Smoothing mesh...")
+
+        # If no smoothing is to be applied, don't waste time running through the process
+        if self.smoothing_factor <= 1:
+            return [i.getpoints(avg_vel) for i in img_list]
+
+        output_points = []
+        smoothing_group = []
+
+        # Prepopulate smoothing group (the points that will generate one output column)
+        i = -self.smoothing_factor
+        while i < 0:
+            smoothing_group.append(self.getnextsmoothpoint(i, img_list))
+
+        # Get a smoothed column for each column in the image
+        for i in range(0, len(img_list)):
+            output_points.append(self.smooth(smoothing_group))
+            smoothing_group = smoothing_group[1:]
+            smoothing_group.append(self.getnextsmoothpoint(i, img_list))
+
+        if self.debug:
+            print("Mesh smoothing completed.")
+
+        return output_points
+
+    def getnextsmoothpoint(self, i, img_list):
+        index = i + self.smoothing_factor
+
+        # Wrap if past length of the list
+        while index >= len(img_list):
+            index -= len(img_list)
+
+        return img_list[index].getpoints()
+
+    def smooth(self, smoothing_group):
+        """
+        Given a list (smoothing group) of lists (columns) of point tuples,
+        this function averages the points from each column by their z-coord
+        into one combined column.
+        """
+        z_groups = {}
+
+        # Populates a dictionary indexed by z-value of lists of point tuples
+        for img in smoothing_group:
+            for point in img:
+                # Add a point to an existing entry in the dictionary
+                if point[2] in z_groups:
+                    z_groups[point[2]].append = point
+                # Or create a new entry in the dictionary if this z value is not already
+                # indexed
+                else:
+                    z_groups[point[2]] = [point]
+
+        # For each list (z_group) of points in the dictionary, average the points together
+        # and output the result
+        return [self.averagepoints(z_group) for index, z_group in z_groups]
+
+    def averagepoints(self, z_group):
+        """
+        Given a list (z_group) of point tuples with the same z value,
+        this function averages the points together into one point.
+        """
+        output_x = 0
+        output_y = 0
+        output_z = z_group[0][2]  # They all share a z-value so this works fine
+
+        # Sum x and y values
+        for point in z_group:
+            output_x += point[0]
+            output_y += point[1]
+
+        return (output_x/len(z_group), output_y/len(z_group), output_z)
+
 # ----- Unit Testing ----- #
 if __name__ == "__main__":
-        s = Scan(resolution=3, debug=True)
+        s = Scan(resolution=3, smoothing_factor=1, debug=True)
 
         print("Beginning scan...")
         s.scan()
