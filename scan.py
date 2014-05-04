@@ -90,7 +90,10 @@ class Scan(object):
 
         # Add points from image objects to mesh
         for i in img_list:
-            mesh.addpoints(i.getpoints(avg_vel))
+            points = i.getpoints(avg_vel)
+            print points
+            mesh.addpoints(points)
+            
 
         # Add mesh to the meshs list
         self.meshs.append(mesh)
@@ -131,7 +134,8 @@ class Scan(object):
                 print("Taking image number " + str(i))
 
             img_queue.put(self.hardware.captureimage())
-            time.sleep(1/self.resolution)
+            time.sleep(1.0/self.resolution)
+            i += 1
 
         if self.verbose:
             print("Image capture complete.")
@@ -143,11 +147,13 @@ class Scan(object):
         """
 
         img_list = []
-
+        i = 0
         while not img_queue.empty() or not self.hardware.isdone():
             try:
+                print('initializing image ' + str(i))
                 img = image.Image(img_queue.get(True, 0.25))
                 img_list.append(img)
+                i += 1
             except q.Empty:
                 continue
 
@@ -165,7 +171,7 @@ class Scan(object):
 
 # ----- Unit Testing ----- #
 if __name__ == "__main__":
-        s = Scan(resolution=3, debug=True)
+        s = Scan(resolution=10, debug=True)
 
         print("Beginning scan...")
         s.scan()
