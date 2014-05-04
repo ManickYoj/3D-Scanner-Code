@@ -3,21 +3,24 @@ scan.py
 -------
 Author: Nick Francisci & Celine Ta
 Status: Incomplete & Untested
-Description: 
-The main class for an instance of the scanning program. 
+Description:
+The main class for an instance of the scanning program.
 
 """
 
-import hardware, image, time
+import hardware
+import image
+import time
 import mesh as m
 import Queue as q
 import threading as t
-import cv2 
+
 
 class Scan(object):
+
     """ The wrapper class for the program. """
-    
-    def __init__(self, resolution = None, verbose = False, debug = False):
+
+    def __init__(self, resolution=None, verbose=False, debug=False):
         """
         Initilizes the scanner with the given parameters.
 
@@ -39,26 +42,23 @@ class Scan(object):
         self.hardware = self.findhardware()
         self.meshs = []
 
-
     # ----- Public Methods ----- #
+    def setresolution(self, resolution=None):
+        """
+        Sets or resets the resolution of the scan class.
 
-    def setresolution(self, resolution = None):
-        """ 
-        Sets or resets the resolution of the scan class. 
-
-        Arguments: 
+        Arguments:
             - resolution = the desired value of resolution
         """
 
-        if resolution == None:
+        if not resolution:
             resolution = 6.0
-        
+
         self.resolution = resolution
         if self.verbose:
-            print "Resolution set to " + str(resolution)
+            print("Resolution set to " + str(resolution))
 
-
-    def scan(self, lock_wait_time = 1, name = None):
+    def scan(self, lock_wait_time=1, name=None):
         """
         Performs a single scan.
 
@@ -68,15 +68,15 @@ class Scan(object):
 
         # Construct and initialize a Queue of tuples of captured images (unprocessed) and time stamps
         img_queue = q.Queue()
-        
+
         # Construct and initialize a new Thread for processing Images
         process_thread = t.Thread(target=self.begincapture, args=[img_queue])
-                
+
         # Construct and initialize a Mesh object with the name mesh + index, EG mesh0
-        if name == None:
+        if name is None:
             name = "mesh" + str(len(self.meshs))
-        mesh = m.Mesh(name = name)
-        
+        mesh = m.Mesh(name=name)
+
         # Setup hardware lock
         while self.hardware.islocked():
             time.sleep(lock_wait_time)
@@ -92,7 +92,7 @@ class Scan(object):
         # Release hardware lock
         avg_vel = self.hardware.getavgvel()
         self.hardware.togglelock()
-        
+
         # add points from image objects to mesh
         for i in img_list:
             mesh.addpoints(i.getpoints(avg_vel))
@@ -101,12 +101,11 @@ class Scan(object):
         self.meshs.append(mesh)
 
         if self.verbose:
-            print "Scan complete. Mesh is in index " + str(len(self.meshs)-1) + " of the mesh array."
-            
+            print("Scan complete. Mesh is in index " + str(len(self.meshs)-1) + " of the mesh array.")
+
         self.exportmesh()
 
-
-    def exportmesh(self, mesh_index = None, export_file_type = "CSV", filename = None):
+    def exportmesh(self, mesh_index=None, export_file_type="CSV", filename=None):
         """
         Exports the mesh as a file if the requested filetype is supported.
 
@@ -116,8 +115,8 @@ class Scan(object):
         """
 
         export_file_type.upper()
-        
-        if mesh_index is None or mesh_index>len(self.meshs):
+
+        if mesh_index is None or mesh_index > len(self.meshs):
             mesh = self.meshs[-1]
         elif mesh_index < 0:
             mesh = self.meshes[0]
@@ -125,68 +124,55 @@ class Scan(object):
         if export_file_type in ["CSV", ".CSV"]:
             mesh.exportcsv(filename)
         else:
-            print "The inputted file type is not supported."
-
+            print("The inputted file type is not supported.")
 
     # ----- Private Methods ----- #
-
     def begincapture(self, img_queue):
-        """ Scans an object """
+        """
+        Takes pictures at regular intervals and adds them to the queue
+        of unprocessed images.
+        """
         i = 0
-        while True:
-            if self.hardware.isdone():
-                #print "Taking image number " + str(i)                
-                # adds a the data to create a new image to the queue
-                print("Getting Images from Hardware")
-                for i in range(0,len(self.hardware.frames),3):
-                    new_image=self.hardware.frames[i]
-                    img_queue.put(new_image)
-#            cv2.imshow('frame', new_image[0])
-#            cv2.waitKey(0)
-                break
-                
-            time.sleep(1)
+        while not self.hardware.isdone():
+            if self.verbose:
+                print("Taking image number " + str(i))
+
+            img_queue.put(self.hardware.captureimage())
+            time.sleep(1/self.resolution)
 
         if self.verbose:
-            print "Image capture complete."
-
+            print("Image capture complete.")
 
     def processimgs(self, img_queue):
         """
         Check for new captured images to process.
-        Returns an img_list of processed image objects once processing is complete. 
+        Returns an img_list of processed image objects once processing is complete.
         """
-        img_list=[]
-        while img_queue.empty():
-            time.sleep(1)        
-        
+
+        img_list = []
+
         while not img_queue.empty() or not self.hardware.isdone():
-                # process the next image in queue and initializes as new Image
-            if not img_queue.empty():
-                img = image.Image(img_queue.get())
-                print(".")
-                # add to list of processed points
-                img_list.append(img) 
+            try:
+                img = image.Image(img_queue.get(True, 0.25))
+                img_list.append(img)
+            except q.Empty:
+                continue
 
         return img_list
 
-
     def findhardware(self):
-        """ 
-        Finds the existing instance of hardware and returns a reference to it. 
+        """
+        Finds the existing instance of hardware and returns a reference to it.
 
         Returns: the current instance of the hardware class to use.
         """
 
         #TODO: Actually find the hardware!
-        return hardware.Hardware(debug = self.debug)
+        return hardware.Hardware(debug=self.debug)
 
 # ----- Unit Testing ----- #
-
 if __name__ == "__main__":
-        s = Scan(debug = True)
-        print "Beginning scan..."
+        s = Scan(debug=True)
+        print("Beginning scan...")
         s.scan()
-#        print(s.meshs[0].mesh)
         s.exportmesh()
-    
