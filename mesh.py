@@ -33,8 +33,12 @@ class Mesh(object):
 
     def addpoints(self, points):
         """ Adds a list of tuples of points's (x,y,z) values onto the mesh object. """
+        if not points:
+            return
+
         while isinstance(points[0], list):
             points = [item for sublist in points for item in sublist]
+
         self.mesh.extend(points)
 
     def setname(self, name):
