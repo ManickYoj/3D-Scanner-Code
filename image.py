@@ -11,6 +11,7 @@ import math
 class Image(object):
     
     def __init__(self, tup):
+        self.counter = 0
         self.image = tup[0]         #Stores original image 
         self.mask = []
         self.timeStamp = tup[1]              
@@ -21,12 +22,12 @@ class Image(object):
         self.angle = 0         
         self.Y = 5                  #distance in cm b/n cameraline and laser
         self.X = 9.8                #distance in cm from camera to center
-        self.H = 10.95              #distance in cm from laser to center 
-        print('initializing image')        
+        self.H = 10.95              #distance in cm from laser to center         
         self.center = 350           #Measured number        
         self.filterforredposition()
         self.rememberonlyredposition()
         self.getdepth()
+        
 #        self.findheight()
         
     
@@ -84,9 +85,11 @@ class Image(object):
             if self.redPosition[index] != -1:        #If a red value exists:
                 yPrime = self.redPosition[index] - self.center
                 depth = ((self.H*yPrime)/self.Y)
-                if 5 < depth < 500 or -500 < depth < -5: 
+                if 5 < np.abs(depth) < 500:
                     self.radii.append(depth)
-                    self.heights.append(len(self.redPosition)-1-index)
+                    self.heights.append(index)
+                elif np.abs(depth) > 500:
+                    self.counter +=1
 #        print self.radii
         #Needs more math to stop distortion
         
@@ -113,12 +116,15 @@ class Image(object):
     def getpoints(self, factor):
         '''takes in the time, depth, and conversion factor, outputs cartesian
         coordinates for the image'''
-        for index in range(len(self.radii)):
-            self.coordinates.append(self.cyltocar(self.radii[index], 
-                                                  self.convertangle(factor), 
-                                                  self.heights[index]))
-        return self.coordinates
-        
+        if self.counter < 1000:
+            for index in range(len(self.radii)):
+                self.coordinates.append(self.cyltocar(self.radii[index], 
+                                                      self.convertangle(factor), 
+                                                      self.heights[index]))
+            return self.coordinates
+        else:
+            return []
+            
 if __name__ == '__main__':
 #    cam = cv2.VideoCapture(1)
 #    s, img = cam.read() 

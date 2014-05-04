@@ -49,7 +49,7 @@ class Hardware(object):
         # Wait until video camera has begun capture, start timer, and return
         while not self.frames:
             time.sleep(0.01)
-        self.start_time = time.time()
+#        self.start_time = time.time()
 
     def captureimage(self):
         """ Returns the most recent image, or none if scan is complete. """
@@ -74,6 +74,7 @@ class Hardware(object):
 
         camera: the index of video camera being used [should be 1]'''
         cap = cv2.VideoCapture(self.camera)
+        self.start_time = time.time()
 
         # Take video until rotation is complete
         while not self.total_time:
@@ -91,3 +92,9 @@ class Hardware(object):
     def stopmotor(self):
         ''' Stops the motor from rotating. '''
         self.board.setLow(self.motor_pin)
+        
+if __name__ == '__main__':
+    test = Hardware()
+    test.board.setHigh(4)
+    time.sleep(3)
+    test.board.setLow(4)
