@@ -88,7 +88,7 @@ class Image(object):
                 if 5 < np.abs(depth) < 500:
                     self.radii.append(depth)
                     self.heights.append(index)
-                elif np.abs(depth) > 500:
+                elif np.abs(depth) < 5:
                     self.counter +=1
 #        print self.radii
         #Needs more math to stop distortion
@@ -116,7 +116,7 @@ class Image(object):
     def getpoints(self, factor):
         '''takes in the time, depth, and conversion factor, outputs cartesian
         coordinates for the image'''
-        if self.counter < 1000:
+        if self.counter < 100:
             for index in range(len(self.radii)):
                 self.coordinates.append(self.cyltocar(self.radii[index], 
                                                       self.convertangle(factor), 

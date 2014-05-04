@@ -88,16 +88,11 @@ class Scan(object):
         # Collect average velocity from the hardware and release hardware lock
         avg_vel = self.hardware.getavgvel()
         self.hardware.togglelock()
-
-        # Add points from image objects to mesh
+         
         for i in img_list:
-            points = i.getpoints(avg_vel)
-            print points
-            mesh.addpoints(points)
-            
+            mesh.addpoints(i.getpoints(avg_vel))
         # Add points from image objects to mesh with a smoothing filter
-        self.mesh.addpoints(self.smoothedpoints(img_list, avg_vel))
-
+        #mesh.addpoints(self.smoothedpoints(img_list, avg_vel))
 
         # Add mesh to the meshs list
         self.meshs.append(mesh)
@@ -154,7 +149,7 @@ class Scan(object):
         i = 0
         while not img_queue.empty() or not self.hardware.isdone():
             try:
-                print('initializing image ' + str(i))
+                print('Processing image ' + str(i))
                 img = image.Image(img_queue.get(True, 0.25))
                 img_list.append(img)
                 i += 1
@@ -180,40 +175,40 @@ class Scan(object):
         that averages adjacent points over a width given by the self.smoothing_factor.
         Warning: This could potentially be a very time consuming operation.
         """
-        if self.debug:
-            print("Smoothing mesh...")
 
         # If no smoothing is to be applied, don't waste time running through the process
         if self.smoothing_factor <= 1:
             return [i.getpoints(avg_vel) for i in img_list]
+            
+        if self.debug:
+            print("Smoothing mesh...")
 
         output_points = []
         smoothing_group = []
 
         # Prepopulate smoothing group (the points that will generate one output column)
-        i = -self.smoothing_factor
-        while i < 0:
-            smoothing_group.append(self.getnextsmoothpoint(i, img_list))
+        for i in range(-self.smoothing_factor,0):
+            smoothing_group.append(self.getnextsmoothpoint(i, img_list, avg_vel))
 
         # Get a smoothed column for each column in the image
         for i in range(0, len(img_list)):
             output_points.append(self.smooth(smoothing_group))
             smoothing_group = smoothing_group[1:]
-            smoothing_group.append(self.getnextsmoothpoint(i, img_list))
+            smoothing_group.append(self.getnextsmoothpoint(i, img_list, avg_vel))
 
         if self.debug:
             print("Mesh smoothing completed.")
 
         return output_points
 
-    def getnextsmoothpoint(self, i, img_list):
+    def getnextsmoothpoint(self, i, img_list, avg_vel):
         index = i + self.smoothing_factor
 
         # Wrap if past length of the list
         while index >= len(img_list):
             index -= len(img_list)
 
-        return img_list[index].getpoints()
+        return img_list[index].getpoints(avg_vel)
 
     def smooth(self, smoothing_group):
         """
@@ -228,7 +223,7 @@ class Scan(object):
             for point in img:
                 # Add a point to an existing entry in the dictionary
                 if point[2] in z_groups:
-                    z_groups[point[2]].append = point
+                    z_groups[point[2]].append(point)
                 # Or create a new entry in the dictionary if this z value is not already
                 # indexed
                 else:
@@ -236,7 +231,7 @@ class Scan(object):
 
         # For each list (z_group) of points in the dictionary, average the points together
         # and output the result
-        return [self.averagepoints(z_group) for index, z_group in z_groups]
+        return [self.averagepoints(z_group) for z_group in z_groups.values()]
 
     def averagepoints(self, z_group):
         """
@@ -256,9 +251,6 @@ class Scan(object):
 
 # ----- Unit Testing ----- #
 if __name__ == "__main__":
-        s = Scan(resolution=10, debug=True)
-        s = Scan(resolution=3, smoothing_factor=1, debug=True)
-
-        print("Beginning scan...")
+        s = Scan(resolution=5, smoothing_factor=1, debug=True)
         s.scan()
         s.exportmesh()

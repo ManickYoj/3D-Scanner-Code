@@ -23,6 +23,7 @@ class Hardware(object):
         self.board = Arduino()
 
         self.board.output([self.motor_pin])
+        time.sleep(0.1)
 
     # ----- Public Functions ----- #
     def islocked(self):
@@ -43,7 +44,9 @@ class Hardware(object):
         self.frames = []
 
         # Start motor and video camera
+        print('Beginning Scan')
         self.board.setHigh(self.motor_pin)
+        time.sleep(0.1)
         t.Thread(target=self.videocap).start()
 
         # Wait until video camera has begun capture, start timer, and return
@@ -65,7 +68,7 @@ class Hardware(object):
     # ----- Private Functions ----- #
     def checkrotation(self):
         current_time = time.time() - self.start_time
-        if current_time >= 13:
+        if current_time >= 13.2:
             self.total_time = current_time
 
     def videocap(self):
@@ -95,6 +98,4 @@ class Hardware(object):
         
 if __name__ == '__main__':
     test = Hardware()
-    test.board.setHigh(4)
-    time.sleep(3)
-    test.board.setLow(4)
+    test.beginscan()
