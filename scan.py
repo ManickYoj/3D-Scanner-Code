@@ -89,10 +89,8 @@ class Scan(object):
         avg_vel = self.hardware.getavgvel()
         self.hardware.togglelock()
          
-        for i in img_list:
-            mesh.addpoints(i.getpoints(avg_vel))
         # Add points from image objects to mesh with a smoothing filter
-        #mesh.addpoints(self.smoothedpoints(img_list, avg_vel))
+        mesh.addpoints(self.smoothedpoints(img_list, avg_vel))
 
         # Add mesh to the meshs list
         self.meshs.append(mesh)
@@ -251,6 +249,6 @@ class Scan(object):
 
 # ----- Unit Testing ----- #
 if __name__ == "__main__":
-        s = Scan(resolution=5, smoothing_factor=1, debug=True)
+        s = Scan(resolution=6, smoothing_factor=3, debug=True)
         s.scan()
         s.exportmesh()

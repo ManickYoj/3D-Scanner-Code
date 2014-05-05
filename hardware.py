@@ -15,7 +15,7 @@ from arduino import Arduino
 
 class Hardware(object):
 
-    def __init__(self, camera=0, motor_pin=4, debug=False):
+    def __init__(self, camera=1, motor_pin=4, debug=False):
         self.debug = debug
         self.camera = camera
         self.motor_pin = motor_pin

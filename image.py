@@ -13,28 +13,27 @@ class Image(object):
     def __init__(self, tup):
         self.counter = 0
         self.image = tup[0]         #Stores original image 
-        self.mask = []
         self.timeStamp = tup[1]              
         self.redPosition = []
         self.radii = []
         self.heights = []  
-        self.coordinates = []
         self.angle = 0         
         self.Y = 5                  #distance in cm b/n cameraline and laser
         self.X = 9.8                #distance in cm from camera to center
         self.H = 10.95              #distance in cm from laser to center         
         self.center = 350           #Measured number        
-        self.filterforredposition()
+        self.createmask()
         self.rememberonlyredposition()
         self.getdepth()
         
 #        self.findheight()
         
     
-    def filterforredposition(self): 
+    def createmask(self): 
         '''will take in the image that the camera has just capturedPosition
         and filter so that only the redPosition remains'''
-            
+        #initializes the mask as an empty list        
+        self.mask = []   
         # Convert BGR to HSVimage
         hsv = cv2.cvtColor(self.image, cv2.COLOR_BGR2HSV)
         
@@ -85,13 +84,31 @@ class Image(object):
             if self.redPosition[index] != -1:        #If a red value exists:
                 yPrime = self.redPosition[index] - self.center
                 depth = ((self.H*yPrime)/self.Y)
-                if 5 < np.abs(depth) < 500:
+                if 50 < np.abs(depth) < 500:
                     self.radii.append(depth)
                     self.heights.append(index)
-                elif np.abs(depth) < 5:
+                elif np.abs(depth) < 50:
                     self.counter +=1
+        #uses a Gaussian smoothing function to filter radii, in hopes of 
+        #reducing the noise
+        self.radii = self.smoothListGaussian(self.radii)
 #        print self.radii
-        #Needs more math to stop distortion
+        
+    def smoothListGaussian(self, l,degree=5):  
+         '''takes in a list and a degree, returns a smoothed version of the list'''
+         window=degree*2-1  
+         weight=np.array([1.0]*window)  
+         weightGauss=[]  
+         for i in range(window):  
+             i=i-degree+1  
+             frac=i/float(window)  
+             gauss=1/(np.exp((4*(frac))**2))  
+             weightGauss.append(gauss)  
+         weight=np.array(weightGauss)*weight  
+         smoothed=[0.0]*(len(l)-window)  
+         for i in range(len(smoothed)):  
+             smoothed[i]=sum(np.array(l[i:i+window])*weight)/sum(weight)  
+         return smoothed
         
     def cyltocar(self, r, theta, height):
         '''takes in cylindrical coordinates and converts to cartesian'''
@@ -116,12 +133,13 @@ class Image(object):
     def getpoints(self, factor):
         '''takes in the time, depth, and conversion factor, outputs cartesian
         coordinates for the image'''
-        if self.counter < 100:
+        coordinates = []
+        if self.counter < 3:
             for index in range(len(self.radii)):
-                self.coordinates.append(self.cyltocar(self.radii[index], 
-                                                      self.convertangle(factor), 
-                                                      self.heights[index]))
-            return self.coordinates
+                coordinates.append(self.cyltocar(self.radii[index], 
+                                                 self.convertangle(factor), 
+                                                 self.heights[index]))
+            return coordinates
         else:
             return []
             
